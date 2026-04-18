@@ -1,43 +1,111 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PenguStream — Vérification Adresse Mail</title>
-<link href="https://fonts.googleapis.com/css2?family=Righteous&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
-<style>
-:root{--glacier:#b8e0f7;--deep:#051e30;--ocean:#0a3d62;--teal:#17a589;--gold:#f0c040;--aurora1:#43e6b5;--aurora2:#7b68ee;--aurora3:#ff6fb7;--text-accent:#b8e0f7;
-/* Theme overrides (changed by JS) */    
---theme-particle1:❄️;--theme-particle2:🐧;
-}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PenguStream — Vérification Adresse Mail</title>
+  <link href="https://fonts.googleapis.com/css2?family=Righteous&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --glacier: #b8e0f7;
+      --deep: #051e30;
+      --ocean: #0a3d62;
+      --teal: #17a589;
+      --gold: #f0c040;
+      --aurora1: #43e6b5;
+      --aurora2: #7b68ee;
+      --aurora3: #ff6fb7;
+      --text-accent: #b8e0f7;
+    }
 
-/* HERO */
-.hero{position:relative;z-index:1;min-height:100vh;display:flex;align-items:center;justify-content:center;flex-direction:column;text-align:center;padding:100px 20px 60px;gap:26px;}
-.hero-penguin{width:min(320px,75vw);filter:drop-shadow(0 20px 60px rgba(67,230,181,.25));animation:float 5s ease-in-out infinite;}
-@keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-16px);}}
-.hero-title{font-family:'Righteous',cursive;font-size:clamp(2.5rem,8vw,5.8rem);line-height:1.05;background:linear-gradient(135deg,#fff 30%,#b8e0f7,#43e6b5);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-.hero-sub{font-size:1.1rem;color:rgba(255,255,255,.65);max-width:520px;line-height:1.7;}
-.hero-btns{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;}
-.btn-primary{background:linear-gradient(135deg,var(--teal),#0e7a62);color:#fff;padding:14px 34px;border-radius:50px;font-weight:800;font-size:1rem;border:none;cursor:pointer;transition:transform .2s,box-shadow .2s;box-shadow:0 4px 20px rgba(23,165,137,.35);font-family:'Nunito',sans-serif;}
-.btn-primary:hover{transform:translateY(-3px);box-shadow:0 8px 28px rgba(23,165,137,.5);}
-.btn-secondary{background:transparent;color:var(--text-accent);padding:14px 34px;border-radius:50px;font-weight:800;font-size:1rem;border:2px solid rgba(184,224,247,.35);cursor:pointer;transition:transform .2s;font-family:'Nunito',sans-serif;}
-.btn-secondary:hover{transform:translateY(-3px);background:rgba(184,224,247,.06);}
-  
-  /* <!-- HERO --> */
- <section class="hero">
-  <div style="font-size:clamp(7rem,20vw,11rem);animation:float 5s ease-in-out infinite;filter:drop-shadow(0 16px 50px rgba(67,230,181,.5));margin-bottom:4px;line-height:1;" aria-label="Pingouin cartoon">🐧</div>
-  <h1 class="hero-title">Adresse mail verifié ✅</h1>
-  <p class="hero-sub">Acceder au site grace auboutonci-dessous !</p>
-  <div class="hero-btns">
-  
-    <!-- Acces site -->
-    <button class="btn-primary" onclick="window.open('https://aaripotere1256.github.io/pengu-stream/','_blank')">
-      Acceder a Pengu Stream
-    </button>
-    
-  </div>
-</section>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-  </script>
+    body {
+      background: var(--deep);
+      font-family: 'Nunito', sans-serif;
+      color: #fff;
+      min-height: 100vh;
+    }
+
+    /* HERO */
+    .hero {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      text-align: center;
+      padding: 100px 20px 60px;
+      gap: 26px;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50%       { transform: translateY(-16px); }
+    }
+
+    .hero-title {
+      font-family: 'Righteous', cursive;
+      font-size: clamp(2.5rem, 8vw, 5.8rem);
+      line-height: 1.05;
+      background: linear-gradient(135deg, #fff 30%, #b8e0f7, #43e6b5);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-sub {
+      font-size: 1.1rem;
+      color: rgba(255, 255, 255, .65);
+      max-width: 520px;
+      line-height: 1.7;
+    }
+
+    .hero-btns {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--teal), #0e7a62);
+      color: #fff;
+      padding: 14px 34px;
+      border-radius: 50px;
+      font-weight: 800;
+      font-size: 1rem;
+      border: none;
+      cursor: pointer;
+      transition: transform .2s, box-shadow .2s;
+      box-shadow: 0 4px 20px rgba(23, 165, 137, .35);
+      font-family: 'Nunito', sans-serif;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 28px rgba(23, 165, 137, .5);
+    }
+  </style>
+</head>
+<body>
+
+  <section class="hero">
+    <div style="font-size: clamp(7rem, 20vw, 11rem); animation: float 5s ease-in-out infinite; filter: drop-shadow(0 16px 50px rgba(67,230,181,.5)); margin-bottom: 4px; line-height: 1;" aria-label="Pingouin cartoon">🐧</div>
+    <h1 class="hero-title">Adresse mail vérifiée ✅</h1>
+    <p class="hero-sub">Accéder au site grâce au bouton ci-dessous !</p>
+    <div class="hero-btns">
+      <button class="btn-primary" onclick="window.open('https://aaripotere1256.github.io/pengu-stream/','_blank')">
+       🐧 Accéder à Pengu Stream
+      </button>
+    </div>
+  </section>
+
 </body>
 </html>
