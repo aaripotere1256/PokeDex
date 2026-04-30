@@ -4,1002 +4,871 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MonDex</title>
-<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900;1000&family=Press+Start+2P&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-  :root {
-    --red: #E3350D;
-    --red-dark: #9B1A00;
-    --red-light: #FF6B4A;
-    --yellow: #FFD700;
-    --yellow-dark: #C9A800;
-    --black: #1A1A1A;
-    --white: #FAFAFA;
-    --gray: #2E2E2E;
-    --gray-light: #F0F0F0;
-    --blue: #3B82F6;
-    --green: #22C55E;
-    --card-bg: #FFFFFF;
-    --shadow: 0 8px 32px rgba(0,0,0,0.15);
-  }
-
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-
-  body {
-    font-family: 'Nunito', sans-serif;
-    background: #F5F5F5;
-    min-height: 100vh;
-    color: var(--black);
-  }
-
-  /* HEADER */
-  header {
-    background: linear-gradient(135deg, var(--red) 0%, var(--red-dark) 100%);
-    padding: 0 24px;
-    height: 70px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    box-shadow: 0 4px 20px rgba(227,53,13,0.4);
-  }
-
-  .logo {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-  }
-
-  .logo-icon {
-    width: 44px;
-    height: 44px;
-    background: white;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 22px;
-    box-shadow: 0 0 0 3px var(--yellow), 0 0 0 5px var(--red-dark);
-  }
-
-  .logo-text {
-    font-family: 'Press Start 2P', monospace;
-    font-size: 14px;
-    color: white;
-    text-shadow: 2px 2px 0 var(--red-dark);
-    letter-spacing: 1px;
-  }
-
-  .logo-sub {
-    font-size: 9px;
-    color: rgba(255,255,255,0.7);
-    font-family: 'Press Start 2P', monospace;
-    display: block;
-    margin-top: 4px;
-  }
-
-  .header-right {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-
-  #user-info {
-    color: white;
-    font-size: 13px;
-    font-weight: 700;
-    opacity: 0;
-    transition: opacity 0.3s;
-  }
-
-  #user-info.visible { opacity: 1; }
-
-  .btn {
-    padding: 8px 18px;
-    border-radius: 50px;
-    border: none;
-    cursor: pointer;
-    font-family: 'Nunito', sans-serif;
-    font-weight: 800;
-    font-size: 13px;
-    transition: all 0.2s;
-  }
-
-  .btn:hover { transform: translateY(-1px); }
-  .btn:active { transform: translateY(0); }
-
-  .btn-yellow {
-    background: var(--yellow);
-    color: var(--black);
-    box-shadow: 0 3px 0 var(--yellow-dark);
-  }
-
-  .btn-yellow:hover { background: #FFE040; }
-
-  .btn-white {
-    background: white;
-    color: var(--red);
-    box-shadow: 0 3px 0 rgba(0,0,0,0.2);
-  }
-
-  .btn-red {
-    background: var(--red);
-    color: white;
-    box-shadow: 0 3px 0 var(--red-dark);
-  }
-
-  .btn-red:hover { background: var(--red-light); }
-
-  .btn-gray {
-    background: #E5E5E5;
-    color: #555;
-  }
-
-  .btn-green {
-    background: var(--green);
-    color: white;
-    box-shadow: 0 3px 0 #15803d;
-  }
-
-  /* AUTH SCREEN */
-  #auth-screen {
-    position: fixed;
-    inset: 0;
-    background: linear-gradient(160deg, var(--red) 0%, var(--red-dark) 50%, #600 100%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
-    padding: 20px;
-  }
-
-  .auth-card {
-    background: white;
-    border-radius: 24px;
-    padding: 40px;
-    width: 100%;
-    max-width: 420px;
-    box-shadow: 0 30px 80px rgba(0,0,0,0.4);
-    position: relative;
-    overflow: hidden;
-  }
-
-  .auth-card::before {
-    content: '';
-    position: absolute;
-    top: -30px; right: -30px;
-    width: 120px; height: 120px;
-    background: var(--yellow);
-    border-radius: 50%;
-    opacity: 0.15;
-  }
-
-  .auth-logo {
-    text-align: center;
-    margin-bottom: 30px;
-  }
-
-  .auth-pokeball {
-    width: 80px;
-    height: 80px;
-    background: linear-gradient(180deg, var(--red) 50%, white 50%);
-    border-radius: 50%;
-    margin: 0 auto 16px;
-    position: relative;
-    box-shadow: 0 0 0 5px var(--black), 0 8px 30px rgba(0,0,0,0.3);
-  }
-
-  .auth-pokeball::before {
-    content: '';
-    position: absolute;
-    top: 50%; left: 50%;
-    transform: translate(-50%, -50%);
-    width: 22px; height: 22px;
-    background: white;
-    border-radius: 50%;
-    border: 5px solid var(--black);
-    z-index: 2;
-  }
-
-  .auth-pokeball::after {
-    content: '';
-    position: absolute;
-    top: calc(50% - 3px); left: 0; right: 0;
-    height: 6px;
-    background: var(--black);
-  }
-
-  .auth-title {
-    font-family: 'Press Start 2P', monospace;
-    font-size: 16px;
-    color: var(--red);
-    text-align: center;
-  }
-
-  .auth-subtitle {
-    text-align: center;
-    color: #888;
-    font-size: 13px;
-    margin-top: 6px;
-  }
-
-  .auth-tabs {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 24px;
-    background: #F5F5F5;
-    padding: 4px;
-    border-radius: 12px;
-  }
-
-  .auth-tab {
-    flex: 1;
-    padding: 10px;
-    border: none;
-    background: transparent;
-    border-radius: 9px;
-    cursor: pointer;
-    font-family: 'Nunito', sans-serif;
-    font-weight: 800;
-    font-size: 14px;
-    color: #888;
-    transition: all 0.2s;
-  }
-
-  .auth-tab.active {
-    background: white;
-    color: var(--red);
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-  }
-
-  .form-group {
-    margin-bottom: 16px;
-  }
-
-  .form-group label {
-    display: block;
-    font-size: 12px;
-    font-weight: 800;
-    color: #555;
-    margin-bottom: 6px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
-
-  .form-group input {
-    width: 100%;
-    padding: 12px 16px;
-    border: 2px solid #E5E5E5;
-    border-radius: 12px;
-    font-family: 'Nunito', sans-serif;
-    font-size: 15px;
-    color: var(--black);
-    transition: border-color 0.2s;
-    outline: none;
-  }
-
-  .form-group input:focus {
-    border-color: var(--red);
-  }
-
-  .auth-error {
-    background: #FEE2E2;
-    color: var(--red);
-    padding: 10px 14px;
-    border-radius: 10px;
-    font-size: 13px;
-    font-weight: 700;
-    margin-bottom: 16px;
-    display: none;
-  }
-
-  .auth-error.show { display: block; }
-
-  /* MAIN CONTENT */
-  #main-content { display: none; }
-  #main-content.visible { display: block; }
-
-  .container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 30px 20px;
-  }
-
-  /* TOOLBAR */
-  .toolbar {
-    display: flex;
-    gap: 12px;
-    margin-bottom: 28px;
-    flex-wrap: wrap;
-    align-items: center;
-  }
-
-  .search-bar {
-    flex: 1;
-    min-width: 200px;
-    position: relative;
-  }
-
-  .search-bar input {
-    width: 100%;
-    padding: 12px 16px 12px 44px;
-    border: 2px solid #E0E0E0;
-    border-radius: 50px;
-    font-family: 'Nunito', sans-serif;
-    font-size: 15px;
-    outline: none;
-    transition: border-color 0.2s;
-    background: white;
-  }
-
-  .search-bar input:focus { border-color: var(--red); }
-
-  .search-bar::before {
-    content: '🔍';
-    position: absolute;
-    left: 14px;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 16px;
-  }
-
-  .count-badge {
-    background: var(--red);
-    color: white;
-    padding: 8px 16px;
-    border-radius: 50px;
-    font-size: 13px;
-    font-weight: 800;
-    white-space: nowrap;
-  }
-
-  /* GRID */
-  .grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 20px;
-  }
-
-  /* CARD */
-  .card {
-    background: white;
-    border-radius: 20px;
-    overflow: hidden;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
-    cursor: pointer;
-    transition: all 0.25s;
-    position: relative;
-    border: 2px solid transparent;
-  }
-
-  .card:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 16px 40px rgba(0,0,0,0.15);
-    border-color: var(--red);
-  }
-
-  .card-img-wrap {
-    height: 160px;
-    background: linear-gradient(135deg, #FFF0EE, #FFE4E0);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .card-img-wrap::after {
-    content: '';
-    position: absolute;
-    bottom: -20px; right: -20px;
-    width: 80px; height: 80px;
-    background: rgba(227,53,13,0.08);
-    border-radius: 50%;
-  }
-
-  .card-img {
-    width: 120px;
-    height: 120px;
-    object-fit: cover;
-    border-radius: 50%;
-    border: 4px solid white;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
-    position: relative;
-    z-index: 1;
-  }
-
-  .card-img-placeholder {
-    width: 120px;
-    height: 120px;
-    border-radius: 50%;
-    background: #E5E5E5;
-    border: 4px solid white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 48px;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.1);
-  }
-
-  .card-number {
-    position: absolute;
-    top: 10px;
-    left: 12px;
-    font-family: 'Press Start 2P', monospace;
-    font-size: 9px;
-    color: rgba(0,0,0,0.3);
-  }
-
-  .card-body {
-    padding: 14px 16px;
-  }
-
-  .card-name {
-    font-size: 16px;
-    font-weight: 900;
-    color: var(--black);
-    margin-bottom: 4px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  .card-type {
-    font-size: 12px;
-    font-weight: 700;
-    color: #888;
-    margin-bottom: 8px;
-  }
-
-  .card-tags {
-    display: flex;
-    gap: 4px;
-    flex-wrap: wrap;
-  }
-
-  .tag {
-    padding: 3px 10px;
-    border-radius: 50px;
-    font-size: 11px;
-    font-weight: 800;
-    text-transform: uppercase;
-  }
-
-  /* Type colors */
-  .tag-feu { background: #FECDD3; color: #BE123C; }
-  .tag-eau { background: #BFDBFE; color: #1D4ED8; }
-  .tag-plante { background: #BBF7D0; color: #15803D; }
-  .tag-électrique { background: #FEF08A; color: #A16207; }
-  .tag-psychique { background: #F5D0FE; color: #7E22CE; }
-  .tag-normal { background: #E5E7EB; color: #374151; }
-  .tag-combat { background: #FED7AA; color: #C2410C; }
-  .tag-vol { background: #E0E7FF; color: #4338CA; }
-  .tag-poison { background: #F3E8FF; color: #7E22CE; }
-  .tag-sol { background: #FEF3C7; color: #92400E; }
-  .tag-roche { background: #D6D3D1; color: #44403C; }
-  .tag-insecte { background: #ECFCCB; color: #3F6212; }
-  .tag-spectre { background: #EDE9FE; color: #4C1D95; }
-  .tag-dragon { background: #DBEAFE; color: #1E3A8A; }
-  .tag-acier { background: #F1F5F9; color: #334155; }
-  .tag-glace { background: #E0F2FE; color: #0369A1; }
-  .tag-ténèbres { background: #1E293B; color: #CBD5E1; }
-  .tag-fée { background: #FCE7F3; color: #BE185D; }
-  .tag-default { background: #F3F4F6; color: #6B7280; }
-
-  /* EMPTY STATE */
-  .empty-state {
-    grid-column: 1 / -1;
-    text-align: center;
-    padding: 80px 20px;
-    color: #AAA;
-  }
-
-  .empty-state .empty-icon { font-size: 64px; margin-bottom: 16px; }
-  .empty-state h3 { font-size: 18px; font-weight: 900; margin-bottom: 8px; color: #666; }
-  .empty-state p { font-size: 14px; }
-
-  /* MODAL */
-  .modal-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.6);
-    backdrop-filter: blur(4px);
-    z-index: 500;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.25s;
-  }
-
-  .modal-overlay.open {
-    opacity: 1;
-    pointer-events: all;
-  }
-
-  .modal {
-    background: white;
-    border-radius: 24px;
-    width: 100%;
-    max-width: 540px;
-    max-height: 90vh;
-    overflow-y: auto;
-    box-shadow: 0 40px 100px rgba(0,0,0,0.3);
-    transform: scale(0.9) translateY(20px);
-    transition: transform 0.25s;
-  }
-
-  .modal-overlay.open .modal {
-    transform: scale(1) translateY(0);
-  }
-
-  .modal-header {
-    background: linear-gradient(135deg, var(--red), var(--red-dark));
-    padding: 24px;
-    border-radius: 24px 24px 0 0;
-    position: relative;
-  }
-
-  .modal-header h2 {
-    font-family: 'Press Start 2P', monospace;
-    font-size: 13px;
-    color: white;
-    text-shadow: 1px 1px 0 var(--red-dark);
-  }
-
-  .modal-close {
-    position: absolute;
-    top: 16px; right: 16px;
-    width: 36px; height: 36px;
-    background: rgba(255,255,255,0.2);
-    border: none;
-    border-radius: 50%;
-    color: white;
-    font-size: 18px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background 0.2s;
-  }
-
-  .modal-close:hover { background: rgba(255,255,255,0.3); }
-
-  .modal-body { padding: 28px; }
-
-  /* DETAIL MODAL */
-  .detail-img-wrap {
-    text-align: center;
-    margin-bottom: 24px;
-  }
-
-  .detail-img {
-    width: 160px;
-    height: 160px;
-    object-fit: cover;
-    border-radius: 50%;
-    border: 5px solid var(--red);
-    box-shadow: 0 8px 30px rgba(227,53,13,0.3);
-  }
-
-  .detail-img-placeholder {
-    width: 160px;
-    height: 160px;
-    border-radius: 50%;
-    background: #F5F5F5;
-    border: 5px solid var(--red);
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 72px;
-  }
-
-  .detail-name {
-    font-size: 26px;
-    font-weight: 900;
-    text-align: center;
-    margin-bottom: 4px;
-  }
-
-  .detail-number {
-    font-family: 'Press Start 2P', monospace;
-    font-size: 10px;
-    color: #AAA;
-    text-align: center;
-    margin-bottom: 16px;
-  }
-
-  .detail-tags {
-    display: flex;
-    gap: 6px;
-    justify-content: center;
-    flex-wrap: wrap;
-    margin-bottom: 20px;
-  }
-
-  .detail-tags .tag {
-    font-size: 13px;
-    padding: 5px 14px;
-  }
-
-  .detail-desc {
-    background: #F9F9F9;
-    border-radius: 14px;
-    padding: 16px;
-    font-size: 14px;
-    line-height: 1.7;
-    color: #555;
-    margin-bottom: 20px;
-  }
-
-  .detail-stats {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    margin-bottom: 24px;
-  }
-
-  .stat-box {
-    background: #F5F5F5;
-    border-radius: 12px;
-    padding: 12px;
-    text-align: center;
-  }
-
-  .stat-label {
-    font-size: 11px;
-    font-weight: 800;
-    color: #AAA;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    margin-bottom: 4px;
-  }
-
-  .stat-value {
-    font-size: 15px;
-    font-weight: 900;
-    color: var(--black);
-  }
-
-  .detail-actions {
-    display: flex;
-    gap: 10px;
-  }
-
-  .detail-actions .btn { flex: 1; padding: 12px; font-size: 14px; }
-
-  /* FORM */
-  .form-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 14px;
-  }
-
-  .form-group textarea {
-    width: 100%;
-    padding: 12px 16px;
-    border: 2px solid #E5E5E5;
-    border-radius: 12px;
-    font-family: 'Nunito', sans-serif;
-    font-size: 14px;
-    resize: vertical;
-    min-height: 80px;
-    outline: none;
-    transition: border-color 0.2s;
-  }
-
-  .form-group textarea:focus { border-color: var(--red); }
-
-  .form-group select {
-    width: 100%;
-    padding: 12px 16px;
-    border: 2px solid #E5E5E5;
-    border-radius: 12px;
-    font-family: 'Nunito', sans-serif;
-    font-size: 14px;
-    outline: none;
-    appearance: none;
-    background: white url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23888' stroke-width='2' fill='none'/%3E%3C/svg%3E") no-repeat right 14px center;
-    cursor: pointer;
-    transition: border-color 0.2s;
-  }
-
-  .form-group select:focus { border-color: var(--red); }
-
-  .img-preview-wrap {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    margin-top: 8px;
-  }
-
-  .img-preview {
-    width: 70px;
-    height: 70px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 3px solid var(--red);
-    display: none;
-  }
-
-  .img-preview.show { display: block; }
-
-  .img-placeholder-small {
-    width: 70px;
-    height: 70px;
-    border-radius: 50%;
-    background: #F0F0F0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 28px;
-    border: 3px solid #E0E0E0;
-    flex-shrink: 0;
-  }
-
-  .file-input-label {
-    display: inline-block;
-    padding: 10px 16px;
-    background: #F5F5F5;
-    border-radius: 10px;
-    cursor: pointer;
-    font-size: 13px;
-    font-weight: 700;
-    color: #555;
-    border: 2px dashed #DDD;
-    transition: all 0.2s;
-    flex: 1;
-    text-align: center;
-  }
-
-  .file-input-label:hover { border-color: var(--red); color: var(--red); background: #FFF5F3; }
-
-  input[type="file"] { display: none; }
-
-  /* TOAST */
-  .toast {
-    position: fixed;
-    bottom: 30px;
-    left: 50%;
-    transform: translateX(-50%) translateY(100px);
-    background: var(--black);
-    color: white;
-    padding: 14px 24px;
-    border-radius: 50px;
-    font-size: 14px;
-    font-weight: 700;
-    z-index: 9999;
-    transition: transform 0.3s;
-    white-space: nowrap;
-  }
-
-  .toast.show { transform: translateX(-50%) translateY(0); }
-  .toast.success { background: var(--green); }
-  .toast.error { background: var(--red); }
-
-  /* LOADING */
-  .loading {
-    text-align: center;
-    padding: 60px;
-    grid-column: 1/-1;
-  }
-
-  .pokeball-spin {
-    width: 50px;
-    height: 50px;
-    background: linear-gradient(180deg, var(--red) 50%, white 50%);
-    border-radius: 50%;
-    margin: 0 auto 16px;
-    border: 4px solid var(--black);
-    animation: spin 1s linear infinite;
-    position: relative;
-  }
-
-  .pokeball-spin::before {
-    content: '';
-    position: absolute;
-    top: 50%; left: 50%;
-    transform: translate(-50%, -50%);
-    width: 14px; height: 14px;
-    background: white;
-    border-radius: 50%;
-    border: 4px solid var(--black);
-    z-index: 2;
-  }
-
-  .pokeball-spin::after {
-    content: '';
-    position: absolute;
-    top: calc(50% - 2px); left: 0; right: 0;
-    height: 4px;
-    background: var(--black);
-  }
-
-  @keyframes spin { to { transform: rotate(360deg); } }
-
-  @media (max-width: 600px) {
-    .form-row { grid-template-columns: 1fr; }
-    .grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 14px; }
-    .logo-text { font-size: 11px; }
-  }
+:root {
+  --bg: #12111A;
+  --bg2: #1C1B27;
+  --bg3: #252436;
+  --border: rgba(255,255,255,0.07);
+  --text: #F0EFF8;
+  --text2: #9896B0;
+  --red: #FF3D3D;
+  --red2: #CC1A1A;
+  --yellow: #FFD84D;
+  --white: #FFFFFF;
+  --radius: 18px;
+  --shadow: 0 8px 40px rgba(0,0,0,0.5);
+
+  /* type colors */
+  --feu:#FF6B35; --eau:#4D9FFF; --plante:#5ECB72; --électrique:#FFD700;
+  --psychique:#FF6BA8; --normal:#A8A878; --combat:#C03028; --vol:#89AAE6;
+  --poison:#A040A0; --sol:#E0C068; --roche:#B8A038; --insecte:#A8B820;
+  --spectre:#705898; --dragon:#7038F8; --acier:#B8B8D0; --glace:#98D8D8;
+  --ténèbres:#705848; --fée:#EE99AC;
+}
+
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;overflow:hidden;}
+
+body {
+  font-family:'Nunito',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  display:flex;
+  height:100vh;
+}
+
+/* ─── SIDEBAR ─── */
+.sidebar {
+  width:72px;
+  background:var(--bg2);
+  border-right:1px solid var(--border);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  padding:20px 0;
+  gap:8px;
+  flex-shrink:0;
+  z-index:10;
+}
+
+.sidebar-logo {
+  width:44px;height:44px;
+  background:var(--red);
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:22px;
+  margin-bottom:16px;
+  box-shadow:0 0 0 3px rgba(255,61,61,0.3);
+  position:relative;
+  cursor:pointer;
+}
+.sidebar-logo::after {
+  content:'';
+  position:absolute;
+  top:50%;left:0;right:0;height:3px;
+  background:rgba(0,0,0,0.3);
+  transform:translateY(-50%);
+}
+.sidebar-logo::before {
+  content:'';
+  position:absolute;
+  top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  width:12px;height:12px;
+  background:white;
+  border-radius:50%;
+  border:3px solid rgba(0,0,0,0.3);
+  z-index:2;
+}
+
+.sidebar-btn {
+  width:48px;height:48px;
+  border-radius:14px;
+  border:none;
+  background:transparent;
+  color:var(--text2);
+  font-size:22px;
+  cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:all 0.2s;
+  position:relative;
+}
+.sidebar-btn:hover,.sidebar-btn.active {
+  background:rgba(255,61,61,0.15);
+  color:var(--red);
+}
+.sidebar-btn .tooltip {
+  position:absolute;
+  left:calc(100% + 12px);
+  background:var(--bg3);
+  color:var(--text);
+  font-size:12px;
+  font-weight:700;
+  padding:6px 10px;
+  border-radius:8px;
+  white-space:nowrap;
+  opacity:0;
+  pointer-events:none;
+  transition:opacity 0.15s;
+  border:1px solid var(--border);
+}
+.sidebar-btn:hover .tooltip { opacity:1; }
+
+.sidebar-spacer { flex:1; }
+
+/* ─── MAIN ─── */
+.main {
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+}
+
+/* ─── TOPBAR ─── */
+.topbar {
+  height:66px;
+  background:var(--bg2);
+  border-bottom:1px solid var(--border);
+  display:flex;
+  align-items:center;
+  padding:0 24px;
+  gap:16px;
+  flex-shrink:0;
+}
+
+.topbar-title {
+  font-family:'Press Start 2P',monospace;
+  font-size:12px;
+  color:var(--red);
+  letter-spacing:2px;
+  margin-right:8px;
+  white-space:nowrap;
+}
+
+.search-wrap {
+  flex:1;
+  max-width:400px;
+  position:relative;
+}
+.search-wrap input {
+  width:100%;
+  background:var(--bg3);
+  border:1.5px solid var(--border);
+  border-radius:50px;
+  padding:10px 16px 10px 42px;
+  color:var(--text);
+  font-family:'Nunito',sans-serif;
+  font-size:14px;
+  font-weight:600;
+  outline:none;
+  transition:border-color 0.2s;
+}
+.search-wrap input:focus { border-color:var(--red); }
+.search-wrap input::placeholder { color:var(--text2); }
+.search-icon {
+  position:absolute;
+  left:14px;top:50%;
+  transform:translateY(-50%);
+  font-size:16px;
+  opacity:0.5;
+}
+
+.filter-wrap {
+  display:flex;
+  gap:6px;
+  align-items:center;
+}
+
+.filter-select {
+  background:var(--bg3);
+  border:1.5px solid var(--border);
+  border-radius:50px;
+  padding:9px 14px;
+  color:var(--text2);
+  font-family:'Nunito',sans-serif;
+  font-size:13px;
+  font-weight:700;
+  outline:none;
+  cursor:pointer;
+  transition:border-color 0.2s;
+}
+.filter-select:focus { border-color:var(--red); color:var(--text); }
+
+.topbar-right {
+  margin-left:auto;
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.count-pill {
+  background:rgba(255,61,61,0.15);
+  color:var(--red);
+  padding:6px 14px;
+  border-radius:50px;
+  font-size:12px;
+  font-weight:800;
+  border:1px solid rgba(255,61,61,0.3);
+}
+
+.btn {
+  padding:9px 18px;
+  border-radius:50px;
+  border:none;
+  cursor:pointer;
+  font-family:'Nunito',sans-serif;
+  font-weight:800;
+  font-size:13px;
+  transition:all 0.2s;
+}
+.btn:hover { transform:translateY(-1px); }
+.btn-red { background:var(--red); color:white; box-shadow:0 4px 16px rgba(255,61,61,0.4); }
+.btn-red:hover { background:#FF5555; }
+.btn-ghost { background:transparent; color:var(--text2); border:1.5px solid var(--border); }
+.btn-ghost:hover { border-color:var(--red); color:var(--red); }
+.btn-danger { background:rgba(255,61,61,0.1); color:var(--red); border:1.5px solid rgba(255,61,61,0.3); }
+.btn-success { background:#22C55E; color:white; box-shadow:0 4px 16px rgba(34,197,94,0.4); }
+.btn-success:hover { background:#16A34A; }
+
+/* ─── GRID ─── */
+.grid-wrap {
+  flex:1;
+  overflow-y:auto;
+  padding:24px;
+  scrollbar-width:thin;
+  scrollbar-color:var(--bg3) transparent;
+}
+
+.grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(190px,1fr));
+  gap:16px;
+}
+
+/* ─── CARD ─── */
+.card {
+  border-radius:var(--radius);
+  overflow:hidden;
+  cursor:pointer;
+  transition:all 0.25s cubic-bezier(0.34,1.56,0.64,1);
+  position:relative;
+  border:1.5px solid var(--border);
+  background:var(--bg2);
+}
+.card:hover {
+  transform:translateY(-8px) scale(1.02);
+  border-color:rgba(255,255,255,0.2);
+  box-shadow:0 20px 60px rgba(0,0,0,0.5);
+}
+
+.card-top {
+  height:140px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  position:relative;
+  overflow:hidden;
+}
+
+.card-top-bg {
+  position:absolute;
+  inset:0;
+  opacity:0.2;
+}
+
+.card-pokeball-bg {
+  position:absolute;
+  right:-20px;bottom:-20px;
+  width:110px;height:110px;
+  border:18px solid rgba(255,255,255,0.1);
+  border-radius:50%;
+}
+
+.card-num {
+  position:absolute;
+  top:10px;right:12px;
+  font-family:'Press Start 2P',monospace;
+  font-size:8px;
+  color:rgba(255,255,255,0.4);
+}
+
+.card-photo {
+  width:90px;height:90px;
+  border-radius:50%;
+  object-fit:cover;
+  border:3px solid rgba(255,255,255,0.2);
+  position:relative;z-index:1;
+  box-shadow:0 8px 24px rgba(0,0,0,0.4);
+}
+.card-photo-placeholder {
+  width:90px;height:90px;
+  border-radius:50%;
+  background:rgba(255,255,255,0.05);
+  border:3px solid rgba(255,255,255,0.1);
+  display:flex;align-items:center;justify-content:center;
+  font-size:40px;
+  position:relative;z-index:1;
+}
+
+.card-bottom {
+  padding:14px;
+}
+.card-name {
+  font-size:15px;font-weight:900;
+  color:var(--text);
+  margin-bottom:6px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.card-sub {
+  font-size:11px;color:var(--text2);font-weight:600;
+  margin-bottom:8px;
+}
+.card-types {
+  display:flex;gap:5px;flex-wrap:wrap;
+}
+
+.type-badge {
+  padding:3px 9px;
+  border-radius:50px;
+  font-size:10px;
+  font-weight:800;
+  text-transform:uppercase;
+  letter-spacing:0.5px;
+  color:white;
+}
+
+/* ─── EMPTY / LOADING ─── */
+.state-box {
+  grid-column:1/-1;
+  text-align:center;
+  padding:80px 20px;
+  color:var(--text2);
+}
+.pokeball-anim {
+  width:60px;height:60px;
+  border-radius:50%;
+  background:linear-gradient(180deg,var(--red) 50%,white 50%);
+  margin:0 auto 20px;
+  border:5px solid #333;
+  animation:spin 1s linear infinite;
+  position:relative;
+}
+.pokeball-anim::before {
+  content:'';position:absolute;
+  top:50%;left:50%;transform:translate(-50%,-50%);
+  width:16px;height:16px;
+  background:white;border-radius:50%;
+  border:5px solid #333;z-index:2;
+}
+.pokeball-anim::after {
+  content:'';position:absolute;
+  top:calc(50% - 2.5px);left:0;right:0;height:5px;
+  background:#333;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.empty-icon { font-size:64px;margin-bottom:16px; }
+.state-box h3 { font-size:18px;font-weight:900;color:var(--text);margin-bottom:8px; }
+.state-box p { font-size:14px; }
+
+/* ─── MODAL OVERLAY ─── */
+.overlay {
+  position:fixed;inset:0;
+  background:rgba(0,0,0,0.75);
+  backdrop-filter:blur(6px);
+  z-index:200;
+  display:flex;align-items:center;justify-content:center;
+  padding:20px;
+  opacity:0;pointer-events:none;
+  transition:opacity 0.2s;
+}
+.overlay.open { opacity:1;pointer-events:all; }
+
+.modal {
+  background:var(--bg2);
+  border-radius:24px;
+  border:1px solid var(--border);
+  width:100%;max-width:500px;
+  max-height:92vh;
+  overflow-y:auto;
+  transform:scale(0.93) translateY(16px);
+  transition:transform 0.25s cubic-bezier(0.34,1.4,0.64,1);
+  box-shadow:0 40px 100px rgba(0,0,0,0.6);
+  scrollbar-width:thin;scrollbar-color:var(--bg3) transparent;
+}
+.overlay.open .modal { transform:scale(1) translateY(0); }
+
+/* ─── DETAIL MODAL ─── */
+.detail-hero {
+  height:200px;
+  display:flex;align-items:center;justify-content:center;
+  position:relative;overflow:hidden;
+  border-radius:24px 24px 0 0;
+}
+.detail-hero-bg { position:absolute;inset:0;opacity:0.25; }
+.detail-hero-deco {
+  position:absolute;right:-40px;bottom:-40px;
+  width:220px;height:220px;
+  border:36px solid rgba(255,255,255,0.08);
+  border-radius:50%;
+}
+.detail-hero-deco2 {
+  position:absolute;right:40px;bottom:40px;
+  width:100px;height:100px;
+  border:16px solid rgba(255,255,255,0.05);
+  border-radius:50%;
+}
+.detail-photo {
+  width:150px;height:150px;
+  border-radius:50%;
+  object-fit:cover;
+  border:4px solid rgba(255,255,255,0.25);
+  position:relative;z-index:1;
+  box-shadow:0 12px 40px rgba(0,0,0,0.5);
+}
+.detail-photo-ph {
+  width:150px;height:150px;
+  border-radius:50%;
+  background:rgba(255,255,255,0.05);
+  border:4px solid rgba(255,255,255,0.1);
+  display:flex;align-items:center;justify-content:center;
+  font-size:72px;
+  position:relative;z-index:1;
+}
+.detail-close {
+  position:absolute;top:14px;right:14px;
+  width:36px;height:36px;
+  background:rgba(0,0,0,0.4);
+  border:none;border-radius:50%;
+  color:white;font-size:18px;
+  cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  z-index:10;
+  transition:background 0.2s;
+}
+.detail-close:hover { background:rgba(255,61,61,0.6); }
+
+.detail-body { padding:24px; }
+.detail-num { font-family:'Press Start 2P',monospace;font-size:10px;color:var(--text2);margin-bottom:4px; }
+.detail-name { font-size:28px;font-weight:900;margin-bottom:12px; }
+.detail-types { display:flex;gap:6px;flex-wrap:wrap;margin-bottom:20px; }
+.detail-types .type-badge { font-size:12px;padding:5px 14px; }
+
+.detail-grid {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin-bottom:20px;
+}
+.stat-box {
+  background:var(--bg3);
+  border-radius:12px;
+  padding:12px;
+  border:1px solid var(--border);
+}
+.stat-label { font-size:10px;font-weight:800;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px; }
+.stat-val { font-size:16px;font-weight:900; }
+
+.detail-desc {
+  background:var(--bg3);
+  border-radius:12px;
+  padding:14px;
+  font-size:14px;
+  line-height:1.7;
+  color:var(--text2);
+  margin-bottom:20px;
+  border:1px solid var(--border);
+}
+
+.detail-actions { display:flex;gap:10px; }
+.detail-actions .btn { flex:1;padding:12px;font-size:14px; }
+
+/* ─── FORM MODAL ─── */
+.form-header {
+  padding:22px 24px 16px;
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.form-header h2 {
+  font-family:'Press Start 2P',monospace;
+  font-size:11px;
+  color:var(--red);
+}
+
+.form-body { padding:24px; }
+
+.fg { margin-bottom:16px; }
+.fg label {
+  display:block;
+  font-size:11px;font-weight:800;
+  color:var(--text2);
+  text-transform:uppercase;letter-spacing:0.5px;
+  margin-bottom:6px;
+}
+.fg input,.fg textarea,.fg select {
+  width:100%;
+  background:var(--bg3);
+  border:1.5px solid var(--border);
+  border-radius:12px;
+  padding:11px 14px;
+  color:var(--text);
+  font-family:'Nunito',sans-serif;
+  font-size:14px;
+  font-weight:600;
+  outline:none;
+  transition:border-color 0.2s;
+}
+.fg input:focus,.fg textarea:focus,.fg select:focus { border-color:var(--red); }
+.fg input::placeholder,.fg textarea::placeholder { color:var(--text2); }
+.fg textarea { resize:vertical;min-height:80px; }
+.fg select { cursor:pointer;appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%239896B0' stroke-width='2' fill='none'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 12px center;
+}
+
+.form-row { display:grid;grid-template-columns:1fr 1fr;gap:12px; }
+
+.photo-zone {
+  display:flex;align-items:center;gap:14px;
+}
+.photo-preview-wrap { flex-shrink:0; }
+.photo-preview {
+  width:72px;height:72px;border-radius:50%;
+  object-fit:cover;
+  border:3px solid var(--red);
+  display:none;
+}
+.photo-preview.show { display:block; }
+.photo-ph {
+  width:72px;height:72px;border-radius:50%;
+  background:var(--bg3);
+  border:3px dashed var(--border);
+  display:flex;align-items:center;justify-content:center;
+  font-size:28px;
+}
+.file-label {
+  flex:1;
+  background:var(--bg3);
+  border:1.5px dashed var(--border);
+  border-radius:12px;
+  padding:14px;
+  text-align:center;
+  cursor:pointer;
+  font-size:13px;font-weight:700;
+  color:var(--text2);
+  transition:all 0.2s;
+}
+.file-label:hover { border-color:var(--red);color:var(--red); }
+input[type=file] { display:none; }
+
+.form-footer {
+  display:flex;gap:10px;
+  padding:0 24px 24px;
+}
+.form-footer .btn { flex:1;padding:13px;font-size:14px; }
+
+.form-error {
+  background:rgba(255,61,61,0.1);
+  color:var(--red);
+  border:1px solid rgba(255,61,61,0.3);
+  border-radius:10px;
+  padding:10px 14px;
+  font-size:13px;font-weight:700;
+  margin:0 24px 16px;
+  display:none;
+}
+.form-error.show { display:block; }
+
+/* ─── AUTH SCREEN ─── */
+#auth-screen {
+  position:fixed;inset:0;
+  background:linear-gradient(135deg,#0D0D1A 0%,#1A0D1A 50%,#0D1A1A 100%);
+  display:flex;align-items:center;justify-content:center;
+  z-index:1000;
+  padding:20px;
+}
+#auth-screen::before {
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(circle at 30% 40%,rgba(255,61,61,0.08) 0%,transparent 60%),
+             radial-gradient(circle at 70% 70%,rgba(77,159,255,0.06) 0%,transparent 50%);
+}
+
+.auth-card {
+  background:var(--bg2);
+  border:1px solid var(--border);
+  border-radius:28px;
+  padding:40px;
+  width:100%;max-width:420px;
+  position:relative;
+  box-shadow:0 40px 100px rgba(0,0,0,0.6);
+}
+
+.auth-top { text-align:center;margin-bottom:32px; }
+
+.auth-pokeball {
+  width:72px;height:72px;
+  background:linear-gradient(180deg,var(--red) 50%,var(--text) 50%);
+  border-radius:50%;
+  margin:0 auto 16px;
+  position:relative;
+  border:5px solid var(--bg3);
+  box-shadow:0 0 0 2px var(--red), 0 12px 40px rgba(255,61,61,0.4);
+}
+.auth-pokeball::before {
+  content:'';position:absolute;
+  top:50%;left:50%;transform:translate(-50%,-50%);
+  width:18px;height:18px;
+  background:var(--bg2);border-radius:50%;
+  border:5px solid var(--bg3);z-index:2;
+}
+.auth-pokeball::after {
+  content:'';position:absolute;
+  top:calc(50% - 2.5px);left:0;right:0;height:5px;
+  background:var(--bg3);
+}
+
+.auth-title { font-family:'Press Start 2P',monospace;font-size:14px;color:var(--red);margin-bottom:6px; }
+.auth-sub { font-size:13px;color:var(--text2);font-weight:600; }
+
+.auth-tabs {
+  display:flex;gap:4px;
+  background:var(--bg3);
+  border-radius:12px;padding:4px;
+  margin-bottom:24px;
+}
+.auth-tab {
+  flex:1;padding:10px;
+  background:transparent;border:none;border-radius:9px;
+  cursor:pointer;font-family:'Nunito',sans-serif;font-weight:800;font-size:14px;
+  color:var(--text2);transition:all 0.2s;
+}
+.auth-tab.active { background:var(--red);color:white;box-shadow:0 4px 12px rgba(255,61,61,0.4); }
+
+.auth-error {
+  background:rgba(255,61,61,0.1);color:var(--red);
+  border:1px solid rgba(255,61,61,0.3);border-radius:10px;
+  padding:10px 14px;font-size:13px;font-weight:700;
+  margin-bottom:14px;display:none;
+}
+.auth-error.show { display:block; }
+
+/* ─── USER BUBBLE ─── */
+.user-bubble {
+  width:36px;height:36px;
+  border-radius:50%;
+  background:var(--red);
+  display:flex;align-items:center;justify-content:center;
+  font-size:14px;font-weight:900;
+  color:white;
+  cursor:pointer;
+  flex-shrink:0;
+  box-shadow:0 0 0 2px rgba(255,61,61,0.3);
+}
+
+/* ─── TOAST ─── */
+.toast {
+  position:fixed;bottom:28px;left:50%;
+  transform:translateX(-50%) translateY(80px);
+  background:var(--bg3);color:var(--text);
+  border:1px solid var(--border);
+  padding:13px 22px;border-radius:50px;
+  font-size:14px;font-weight:700;
+  z-index:9999;
+  transition:transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
+  white-space:nowrap;
+  box-shadow:var(--shadow);
+}
+.toast.show { transform:translateX(-50%) translateY(0); }
+.toast.success { background:#15803D;border-color:rgba(34,197,94,0.3);color:white; }
+.toast.error { background:var(--red2);border-color:rgba(255,61,61,0.3);color:white; }
+
+/* SQL PRE */
+pre {
+  background:var(--bg);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:14px;
+  font-size:11px;
+  overflow-x:auto;
+  color:var(--text2);
+  margin-top:14px;
+  text-align:left;
+  line-height:1.6;
+}
+
+@media(max-width:600px){
+  .sidebar{display:none;}
+  .form-row{grid-template-columns:1fr;}
+  .grid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;}
+  .topbar-title{display:none;}
+  .filter-wrap{display:none;}
+}
 </style>
 </head>
 <body>
 
-<!-- AUTH SCREEN -->
+<!-- AUTH -->
 <div id="auth-screen">
   <div class="auth-card">
-    <div class="auth-logo">
+    <div class="auth-top">
       <div class="auth-pokeball"></div>
       <div class="auth-title">MON DEX</div>
-      <div class="auth-subtitle">Ton Pokédex Personnel</div>
+      <div class="auth-sub">Ton Pokédex Personnalisé</div>
     </div>
     <div class="auth-tabs">
       <button class="auth-tab active" onclick="switchTab('login')">Connexion</button>
       <button class="auth-tab" onclick="switchTab('register')">Inscription</button>
     </div>
-    <div id="auth-error" class="auth-error"></div>
+    <div id="auth-err" class="auth-error"></div>
     <div id="login-form">
-      <div class="form-group">
-        <label>Email</label>
-        <input type="email" id="login-email" placeholder="dresseur@pokemon.com">
-      </div>
-      <div class="form-group">
-        <label>Mot de passe</label>
-        <input type="password" id="login-password" placeholder="••••••••">
-      </div>
-      <button class="btn btn-red" style="width:100%;padding:14px;font-size:15px;margin-top:8px" onclick="login()">
-        Se connecter
-      </button>
+      <div class="fg"><label>Email</label><input type="email" id="l-email" placeholder="trainer@pokemon.com"></div>
+      <div class="fg"><label>Mot de passe</label><input type="password" id="l-pw" placeholder="••••••••" onkeydown="if(event.key==='Enter')login()"></div>
+      <button class="btn btn-red" style="width:100%;padding:14px;font-size:15px" onclick="login()">Connexion</button>
     </div>
     <div id="register-form" style="display:none">
-      <div class="form-group">
-        <label>Pseudo</label>
-        <input type="text" id="register-username" placeholder="Ash Ketchum">
-      </div>
-      <div class="form-group">
-        <label>Email</label>
-        <input type="email" id="register-email" placeholder="dresseur@pokemon.com">
-      </div>
-      <div class="form-group">
-        <label>Mot de passe</label>
-        <input type="password" id="register-password" placeholder="Min. 6 caractères">
-      </div>
-      <button class="btn btn-red" style="width:100%;padding:14px;font-size:15px;margin-top:8px" onclick="register()">
-        Créer mon compte
-      </button>
+      <div class="fg"><label>Pseudo</label><input type="text" id="r-name" placeholder="Sacha Ketchum"></div>
+      <div class="fg"><label>Email</label><input type="email" id="r-email" placeholder="trainer@pokemon.com"></div>
+      <div class="fg"><label>Mot de passe</label><input type="password" id="r-pw" placeholder="Min. 6 caractères" onkeydown="if(event.key==='Enter')register()"></div>
+      <button class="btn btn-red" style="width:100%;padding:14px;font-size:15px" onclick="register()">Créer mon compte</button>
     </div>
   </div>
 </div>
 
-<!-- MAIN APP -->
-<div id="main-content">
-  <header>
-    <div class="logo">
-      <div class="logo-icon">📖</div>
-      <div>
-        <div class="logo-text">MON DEX</div>
-        <span class="logo-sub">Pokédex Personnel</span>
-      </div>
-    </div>
-    <div class="header-right">
-      <span id="user-info"></span>
-      <button class="btn btn-yellow" onclick="openAddModal()">+ Ajouter</button>
-      <button class="btn btn-white" onclick="logout()">Déconnexion</button>
-    </div>
-  </header>
+<!-- APP -->
+<div id="app" style="display:none;width:100%;display:none;flex:1;overflow:hidden">
 
-  <div class="container">
-    <div class="toolbar">
-      <div class="search-bar">
-        <input type="text" id="search-input" placeholder="Rechercher..." oninput="filterCards()">
-      </div>
-      <span class="count-badge" id="count-badge">0 entrées</span>
-    </div>
-    <div class="grid" id="grid">
-      <div class="loading">
-        <div class="pokeball-spin"></div>
-        <p style="color:#AAA;font-weight:700">Chargement...</p>
-      </div>
-    </div>
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="sidebar-logo" title="MonDex"></div>
+    <div style="height:16px"></div>
+    <button class="sidebar-btn active" title="Mes entrées">
+      📋<span class="tooltip">Mon Dex</span>
+    </button>
+    <button class="sidebar-btn" onclick="openAddModal()" title="Ajouter">
+      ➕<span class="tooltip">Ajouter</span>
+    </button>
+    <div class="sidebar-spacer"></div>
+    <button class="sidebar-btn" onclick="logout()" title="Déconnexion">
+      🚪<span class="tooltip">Déconnexion</span>
+    </button>
   </div>
-</div>
 
-<!-- ADD/EDIT MODAL -->
-<div class="modal-overlay" id="form-modal">
-  <div class="modal">
-    <div class="modal-header">
-      <h2 id="form-modal-title">NOUVELLE ENTRÉE</h2>
-      <button class="modal-close" onclick="closeFormModal()">✕</button>
+  <!-- MAIN -->
+  <div class="main">
+    <!-- TOPBAR -->
+    <div class="topbar">
+      <span class="topbar-title">MON DEX</span>
+      <div class="search-wrap">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="search" placeholder="Rechercher une personne..." oninput="filterGrid()">
+      </div>
+      <div class="filter-wrap">
+        <select class="filter-select" id="type-filter" onchange="filterGrid()">
+          <option value="">Tous les types</option>
+          <option>Feu</option><option>Eau</option><option>Plante</option><option>Électrique</option>
+          <option>Psychique</option><option>Normal</option><option>Combat</option><option>Vol</option>
+          <option>Poison</option><option>Sol</option><option>Roche</option><option>Insecte</option>
+          <option>Spectre</option><option>Dragon</option><option>Acier</option><option>Glace</option>
+          <option>Ténèbres</option><option>Fée</option>
+        </select>
+      </div>
+      <div class="topbar-right">
+        <span class="count-pill" id="count-pill">0 entrées</span>
+        <button class="btn btn-red" onclick="openAddModal()">+ Nouveau</button>
+        <div class="user-bubble" id="user-bubble" title="Déconnexion" onclick="logout()">?</div>
+      </div>
     </div>
-    <div class="modal-body">
-      <div class="form-group">
-        <label>Nom *</label>
-        <input type="text" id="f-name" placeholder="Nom complet">
-      </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label>Type principal</label>
-          <select id="f-type1">
-            <option value="">— Type —</option>
-            <option>Feu</option><option>Eau</option><option>Plante</option>
-            <option>Électrique</option><option>Psychique</option><option>Normal</option>
-            <option>Combat</option><option>Vol</option><option>Poison</option>
-            <option>Sol</option><option>Roche</option><option>Insecte</option>
-            <option>Spectre</option><option>Dragon</option><option>Acier</option>
-            <option>Glace</option><option>Ténèbres</option><option>Fée</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>Type secondaire</label>
-          <select id="f-type2">
-            <option value="">— Optionnel —</option>
-            <option>Feu</option><option>Eau</option><option>Plante</option>
-            <option>Électrique</option><option>Psychique</option><option>Normal</option>
-            <option>Combat</option><option>Vol</option><option>Poison</option>
-            <option>Sol</option><option>Roche</option><option>Insecte</option>
-            <option>Spectre</option><option>Dragon</option><option>Acier</option>
-            <option>Glace</option><option>Ténèbres</option><option>Fée</option>
-          </select>
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label>Taille</label>
-          <input type="text" id="f-height" placeholder="ex: 1m75">
-        </div>
-        <div class="form-group">
-          <label>Poids</label>
-          <input type="text" id="f-weight" placeholder="ex: 70kg">
-        </div>
-      </div>
-      <div class="form-group">
-        <label>Description</label>
-        <textarea id="f-desc" placeholder="Décris cette personne..."></textarea>
-      </div>
-      <div class="form-group">
-        <label>Photo</label>
-        <div class="img-preview-wrap">
-          <div class="img-placeholder-small" id="img-placeholder">👤</div>
-          <img id="img-preview" class="img-preview" alt="preview">
-          <label class="file-input-label" for="f-photo">
-            📁 Choisir une image
-          </label>
-          <input type="file" id="f-photo" accept="image/*" onchange="previewImage(this)">
-        </div>
-      </div>
-      <div style="display:flex;gap:10px;margin-top:8px">
-        <button class="btn btn-gray" style="flex:1;padding:12px" onclick="closeFormModal()">Annuler</button>
-        <button class="btn btn-green" style="flex:2;padding:12px;font-size:15px" onclick="saveEntry()">
-          ✓ Sauvegarder
-        </button>
+
+    <!-- GRID -->
+    <div class="grid-wrap">
+      <div class="grid" id="grid">
+        <div class="state-box"><div class="pokeball-anim"></div><p style="font-weight:700">Chargement...</p></div>
       </div>
     </div>
   </div>
 </div>
 
 <!-- DETAIL MODAL -->
-<div class="modal-overlay" id="detail-modal">
-  <div class="modal">
-    <div class="modal-header">
-      <h2 id="detail-number-header">— #001 —</h2>
-      <button class="modal-close" onclick="closeDetailModal()">✕</button>
+<div class="overlay" id="detail-overlay" onclick="if(event.target===this)closeDetail()">
+  <div class="modal" id="detail-modal">
+    <div class="detail-hero" id="detail-hero">
+      <div class="detail-hero-bg" id="detail-hero-bg"></div>
+      <div class="detail-hero-deco"></div>
+      <div class="detail-hero-deco2"></div>
+      <button class="detail-close" onclick="closeDetail()">✕</button>
+      <div id="detail-img-slot"></div>
     </div>
-    <div class="modal-body">
-      <div class="detail-img-wrap" id="detail-img-wrap"></div>
-      <div class="detail-name" id="detail-name"></div>
-      <div class="detail-number" id="detail-number"></div>
-      <div class="detail-tags" id="detail-tags"></div>
-      <div class="detail-stats" id="detail-stats"></div>
-      <div class="detail-desc" id="detail-desc" style="display:none"></div>
+    <div class="detail-body">
+      <div class="detail-num" id="d-num"></div>
+      <div class="detail-name" id="d-name"></div>
+      <div class="detail-types" id="d-types"></div>
+      <div class="detail-grid" id="d-stats"></div>
+      <div class="detail-desc" id="d-desc" style="display:none"></div>
       <div class="detail-actions">
-        <button class="btn btn-gray" onclick="editCurrent()">✏️ Modifier</button>
-        <button class="btn btn-red" onclick="deleteCurrent()">🗑️ Supprimer</button>
+        <button class="btn btn-ghost" onclick="editCurrent()">✏️ Modifier</button>
+        <button class="btn btn-danger" onclick="deleteCurrent()">🗑️ Supprimer</button>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- FORM MODAL -->
+<div class="overlay" id="form-overlay" onclick="if(event.target===this)closeForm()">
+  <div class="modal">
+    <div class="form-header">
+      <h2 id="form-title">NOUVELLE ENTRÉE</h2>
+      <button class="btn btn-ghost" style="padding:6px 12px;font-size:12px" onclick="closeForm()">✕ Fermer</button>
+    </div>
+    <div class="form-body">
+      <div class="fg"><label>Nom *</label><input type="text" id="f-name" placeholder="Nom complet"></div>
+      <div class="form-row">
+        <div class="fg">
+          <label>Type principal</label>
+          <select id="f-t1">
+            <option value="">— Aucun —</option>
+            <option>Feu</option><option>Eau</option><option>Plante</option><option>Électrique</option>
+            <option>Psychique</option><option>Normal</option><option>Combat</option><option>Vol</option>
+            <option>Poison</option><option>Sol</option><option>Roche</option><option>Insecte</option>
+            <option>Spectre</option><option>Dragon</option><option>Acier</option><option>Glace</option>
+            <option>Ténèbres</option><option>Fée</option>
+          </select>
+        </div>
+        <div class="fg">
+          <label>Type secondaire</label>
+          <select id="f-t2">
+            <option value="">— Aucun —</option>
+            <option>Feu</option><option>Eau</option><option>Plante</option><option>Électrique</option>
+            <option>Psychique</option><option>Normal</option><option>Combat</option><option>Vol</option>
+            <option>Poison</option><option>Sol</option><option>Roche</option><option>Insecte</option>
+            <option>Spectre</option><option>Dragon</option><option>Acier</option><option>Glace</option>
+            <option>Ténèbres</option><option>Fée</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="fg"><label>Taille</label><input type="text" id="f-h" placeholder="ex: 1m75"></div>
+        <div class="fg"><label>Poids</label><input type="text" id="f-w" placeholder="ex: 70 kg"></div>
+      </div>
+      <div class="fg"><label>Description</label><textarea id="f-desc" placeholder="Décris cette personne..."></textarea></div>
+      <div class="fg">
+        <label>Photo</label>
+        <div class="photo-zone">
+          <div class="photo-preview-wrap">
+            <div class="photo-ph" id="photo-ph">👤</div>
+            <img class="photo-preview" id="photo-prev" alt="">
+          </div>
+          <label class="file-label" for="f-file">📁 Choisir une photo</label>
+          <input type="file" id="f-file" accept="image/*" onchange="previewPhoto(this)">
+        </div>
+      </div>
+    </div>
+    <div id="form-err" class="form-error"></div>
+    <div class="form-footer">
+      <button class="btn btn-ghost" onclick="closeForm()">Annuler</button>
+      <button class="btn btn-success" onclick="saveEntry()">✓ Sauvegarder</button>
     </div>
   </div>
 </div>
@@ -1008,329 +877,265 @@
 <div class="toast" id="toast"></div>
 
 <script>
-// ============================
-// CONFIGURATION SUPABASE
-// ============================
-// Remplace ces valeurs par tes vraies clés Supabase
+// ── CONFIG ──
 const SUPABASE_URL = 'https://pipffcdfkshbamvktmyg.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBpcGZmY2Rma3NoYmFtdmt0bXlnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc1NzYzOTMsImV4cCI6MjA5MzE1MjM5M30.uExZVIwUQnj3rt3bmqKxG7eYSkPUIno3IpY_Lxt0sjE';
-
 const { createClient } = supabase;
 const sb = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-// ============================
-// STATE
-// ============================
-let currentUser = null;
-let allEntries = [];
-let editingId = null;
-let currentDetailId = null;
-let pendingImageBase64 = null;
+// ── TYPE COLORS ──
+const TYPE_COLOR = {
+  feu:'#FF6B35',eau:'#4D9FFF',plante:'#5ECB72',électrique:'#FFD700',
+  psychique:'#FF6BA8',normal:'#A8A878',combat:'#C03028',vol:'#89AAE6',
+  poison:'#A040A0',sol:'#E0C068',roche:'#B8A038',insecte:'#A8B820',
+  spectre:'#705898',dragon:'#7038F8',acier:'#B8B8D0',glace:'#98D8D8',
+  ténèbres:'#705848',fée:'#EE99AC'
+};
 
-// ============================
-// AUTH
-// ============================
-function switchTab(tab) {
-  document.querySelectorAll('.auth-tab').forEach((t,i) => t.classList.toggle('active', (tab==='login'&&i===0)||(tab==='register'&&i===1)));
-  document.getElementById('login-form').style.display = tab === 'login' ? 'block' : 'none';
-  document.getElementById('register-form').style.display = tab === 'register' ? 'block' : 'none';
-  document.getElementById('auth-error').classList.remove('show');
+function typeColor(t){ return t ? (TYPE_COLOR[t.toLowerCase()]||'#6B7280') : '#6B7280'; }
+
+// ── STATE ──
+let user = null, entries = [], editId = null, detailId = null, pendingImg = null;
+
+// ── AUTH ──
+function switchTab(tab){
+  document.querySelectorAll('.auth-tab').forEach((b,i)=>b.classList.toggle('active',(tab==='login'?i===0:i===1)));
+  document.getElementById('login-form').style.display = tab==='login'?'block':'none';
+  document.getElementById('register-form').style.display = tab==='register'?'block':'none';
+  document.getElementById('auth-err').classList.remove('show');
 }
 
-function showAuthError(msg) {
-  const el = document.getElementById('auth-error');
-  el.textContent = msg;
-  el.classList.add('show');
-}
+function authErr(msg){ const e=document.getElementById('auth-err'); e.textContent=msg; e.classList.add('show'); }
 
-async function login() {
-  const email = document.getElementById('login-email').value.trim();
-  const password = document.getElementById('login-password').value;
-  if (!email || !password) return showAuthError('Remplis tous les champs.');
-  const { data, error } = await sb.auth.signInWithPassword({ email, password });
-  if (error) return showAuthError('Email ou mot de passe incorrect.');
+async function login(){
+  const email=document.getElementById('l-email').value.trim();
+  const pw=document.getElementById('l-pw').value;
+  if(!email||!pw) return authErr('Remplis tous les champs.');
+  const{data,error}=await sb.auth.signInWithPassword({email,password:pw});
+  if(error) return authErr('Email ou mot de passe incorrect.');
   onLogin(data.user);
 }
 
-async function register() {
-  const username = document.getElementById('register-username').value.trim();
-  const email = document.getElementById('register-email').value.trim();
-  const password = document.getElementById('register-password').value;
-  if (!username || !email || !password) return showAuthError('Remplis tous les champs.');
-  if (password.length < 6) return showAuthError('Mot de passe trop court (6 min).');
-  const { data, error } = await sb.auth.signUp({ email, password, options: { data: { username } } });
-  if (error) return showAuthError(error.message);
-  onLogin(data.user);
+async function register(){
+  const name=document.getElementById('r-name').value.trim();
+  const email=document.getElementById('r-email').value.trim();
+  const pw=document.getElementById('r-pw').value;
+  if(!name||!email||!pw) return authErr('Remplis tous les champs.');
+  if(pw.length<6) return authErr('Mot de passe trop court (6 min).');
+  const{data,error}=await sb.auth.signUp({email,password:pw,options:{data:{username:name}}});
+  if(error) return authErr(error.message);
+  if(data.user) onLogin(data.user);
+  else authErr('Vérifie ton email pour confirmer ton compte.');
 }
 
-async function logout() {
-  await sb.auth.signOut();
-  currentUser = null;
-  allEntries = [];
-  document.getElementById('main-content').classList.remove('visible');
-  document.getElementById('auth-screen').style.display = 'flex';
+async function logout(){ await sb.auth.signOut(); user=null; entries=[];
+  document.getElementById('app').style.display='none';
+  document.getElementById('auth-screen').style.display='flex';
 }
 
-function onLogin(user) {
-  currentUser = user;
-  document.getElementById('auth-screen').style.display = 'none';
-  document.getElementById('main-content').classList.add('visible');
-  const username = user.user_metadata?.username || user.email.split('@')[0];
-  const info = document.getElementById('user-info');
-  info.textContent = '👋 ' + username;
-  info.classList.add('visible');
+function onLogin(u){
+  user=u;
+  document.getElementById('auth-screen').style.display='none';
+  document.getElementById('app').style.display='flex';
+  const name=u.user_metadata?.username||u.email.split('@')[0];
+  document.getElementById('user-bubble').textContent=name[0].toUpperCase();
+  document.getElementById('user-bubble').title=name+' — Déconnexion';
   loadEntries();
 }
 
-// Check session on load
-sb.auth.getSession().then(({ data }) => {
-  if (data.session?.user) onLogin(data.session.user);
-});
+sb.auth.getSession().then(({data})=>{ if(data.session?.user) onLogin(data.session.user); });
 
-// ============================
-// DATABASE
-// ============================
-async function loadEntries() {
-  const grid = document.getElementById('grid');
-  grid.innerHTML = '<div class="loading"><div class="pokeball-spin"></div><p style="color:#AAA;font-weight:700">Chargement...</p></div>';
-
-  const { data, error } = await sb
-    .from('mondex_entries')
-    .select('*')
-    .eq('user_id', currentUser.id)
-    .order('created_at', { ascending: true });
-
-  if (error) {
-    // Table may not exist yet
-    if (error.code === '42P01') {
-      showToast('⚠️ Crée la table Supabase (voir instructions)', 'error');
-      grid.innerHTML = `<div class="empty-state"><div class="empty-icon">⚠️</div><h3>Table manquante</h3><p>Exécute le SQL ci-dessous dans ton projet Supabase</p><pre style="margin-top:16px;background:#F5F5F5;padding:16px;border-radius:12px;font-size:11px;text-align:left;overflow-x:auto">CREATE TABLE mondex_entries (
+// ── DB ──
+async function loadEntries(){
+  setGrid('<div class="state-box"><div class="pokeball-anim"></div><p style="font-weight:700;color:var(--text2)">Chargement...</p></div>');
+  const{data,error}=await sb.from('mondex_entries').select('*').eq('user_id',user.id).order('created_at',{ascending:true});
+  if(error){
+    if(error.code==='42P01'){
+      setGrid(`<div class="state-box"><div class="empty-icon">⚠️</div><h3>Table manquante</h3><p>Exécute ce SQL dans ton projet Supabase :</p><pre>CREATE TABLE mondex_entries (
   id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
   user_id uuid REFERENCES auth.users NOT NULL,
   name text NOT NULL,
-  type1 text,
-  type2 text,
-  height text,
-  weight text,
-  description text,
-  photo text,
+  type1 text, type2 text,
+  height text, weight text,
+  description text, photo text,
   created_at timestamptz DEFAULT now()
 );
 ALTER TABLE mondex_entries ENABLE ROW LEVEL SECURITY;
-CREATE POLICY "Users manage own entries" ON mondex_entries
-  USING (auth.uid() = user_id)
-  WITH CHECK (auth.uid() = user_id);</pre></div>`;
+CREATE POLICY "own" ON mondex_entries
+  USING (auth.uid()=user_id)
+  WITH CHECK (auth.uid()=user_id);</pre></div>`);
     } else {
-      showToast('Erreur de chargement', 'error');
+      toast('Erreur: '+error.message,'error');
     }
     return;
   }
-
-  allEntries = data || [];
-  renderGrid(allEntries);
+  entries=data||[];
+  renderGrid(entries);
 }
 
-async function saveEntry() {
-  const name = document.getElementById('f-name').value.trim();
-  if (!name) { showToast('Le nom est obligatoire', 'error'); return; }
+async function saveEntry(){
+  const name=document.getElementById('f-name').value.trim();
+  if(!name){ formErr('Le nom est obligatoire.'); return; }
 
-  const entry = {
-    user_id: currentUser.id,
+  const payload={
+    user_id:user.id,
     name,
-    type1: document.getElementById('f-type1').value || null,
-    type2: document.getElementById('f-type2').value || null,
-    height: document.getElementById('f-height').value.trim() || null,
-    weight: document.getElementById('f-weight').value.trim() || null,
-    description: document.getElementById('f-desc').value.trim() || null,
-    photo: pendingImageBase64 || null,
+    type1:document.getElementById('f-t1').value||null,
+    type2:document.getElementById('f-t2').value||null,
+    height:document.getElementById('f-h').value.trim()||null,
+    weight:document.getElementById('f-w').value.trim()||null,
+    description:document.getElementById('f-desc').value.trim()||null,
   };
 
-  let error;
-  if (editingId) {
-    if (!pendingImageBase64) {
-      const existing = allEntries.find(e => e.id === editingId);
-      if (existing) entry.photo = existing.photo;
-    }
-    ({ error } = await sb.from('mondex_entries').update(entry).eq('id', editingId));
-  } else {
-    ({ error } = await sb.from('mondex_entries').insert(entry));
-  }
+  if(pendingImg) payload.photo=pendingImg;
+  else if(editId){ const ex=entries.find(e=>e.id===editId); if(ex) payload.photo=ex.photo; }
 
-  if (error) { showToast('Erreur lors de la sauvegarde', 'error'); return; }
+  let err;
+  if(editId) ({error:err}=await sb.from('mondex_entries').update(payload).eq('id',editId));
+  else ({error:err}=await sb.from('mondex_entries').insert(payload));
 
-  showToast(editingId ? '✏️ Modifié !' : '✅ Ajouté !', 'success');
-  closeFormModal();
-  loadEntries();
+  if(err){ formErr('Erreur: '+err.message); return; }
+  toast(editId?'✏️ Modifié !':'✅ Ajouté !','success');
+  closeForm(); loadEntries();
 }
 
-async function deleteEntry(id) {
-  const { error } = await sb.from('mondex_entries').delete().eq('id', id);
-  if (error) { showToast('Erreur de suppression', 'error'); return; }
-  showToast('🗑️ Supprimé', 'success');
-  closeDetailModal();
-  loadEntries();
+async function deleteEntry(id){
+  const{error}=await sb.from('mondex_entries').delete().eq('id',id);
+  if(error){ toast('Erreur suppression','error'); return; }
+  toast('🗑️ Supprimé','success');
+  closeDetail(); loadEntries();
 }
 
-// ============================
-// RENDER
-// ============================
-function renderGrid(entries) {
-  const grid = document.getElementById('grid');
-  const badge = document.getElementById('count-badge');
-  badge.textContent = entries.length + (entries.length > 1 ? ' entrées' : ' entrée');
-
-  if (!entries.length) {
-    grid.innerHTML = `<div class="empty-state"><div class="empty-icon">🔍</div><h3>Aucune entrée trouvée</h3><p>Clique sur "+ Ajouter" pour commencer ton Dex !</p></div>`;
+// ── RENDER ──
+function renderGrid(list){
+  const pill=document.getElementById('count-pill');
+  pill.textContent=list.length+(list.length>1?' entrées':' entrée');
+  if(!list.length){
+    setGrid('<div class="state-box"><div class="empty-icon">🔍</div><h3>Aucune entrée</h3><p>Clique sur "+ Nouveau" pour commencer !</p></div>');
     return;
   }
-
-  grid.innerHTML = entries.map((e, i) => {
-    const globalIndex = allEntries.findIndex(a => a.id === e.id);
-    const num = String(globalIndex + 1).padStart(3, '0');
-    const imgHtml = e.photo
-      ? `<img class="card-img" src="${e.photo}" alt="${e.name}" onerror="this.style.display='none'">`
-      : `<div class="card-img-placeholder">👤</div>`;
-    const tags = [e.type1, e.type2].filter(Boolean).map(t => `<span class="tag tag-${t.toLowerCase()}">${t}</span>`).join('');
-
+  document.getElementById('grid').innerHTML=list.map(e=>{
+    const idx=entries.findIndex(a=>a.id===e.id)+1;
+    const num='#'+String(idx).padStart(3,'0');
+    const c1=typeColor(e.type1), c2=typeColor(e.type2||e.type1);
+    const bg=`linear-gradient(135deg,${c1}55,${c2}33)`;
+    const img=e.photo
+      ?`<img class="card-photo" src="${e.photo}" alt="${e.name}" onerror="this.style.display='none'">`
+      :`<div class="card-photo-placeholder">👤</div>`;
+    const types=[e.type1,e.type2].filter(Boolean).map(t=>`<span class="type-badge" style="background:${typeColor(t)}">${t}</span>`).join('');
     return `<div class="card" onclick="openDetail('${e.id}')">
-      <div class="card-img-wrap">
-        <span class="card-number">#${num}</span>
-        ${imgHtml}
+      <div class="card-top" style="background:${bg}">
+        <div class="card-pokeball-bg"></div>
+        <span class="card-num">${num}</span>
+        ${img}
       </div>
-      <div class="card-body">
+      <div class="card-bottom">
         <div class="card-name">${e.name}</div>
-        <div class="card-type">${[e.height, e.weight].filter(Boolean).join(' · ') || 'Inconnu'}</div>
-        <div class="card-tags">${tags || '<span class="tag tag-default">Non classé</span>'}</div>
+        <div class="card-sub">${[e.height,e.weight].filter(Boolean).join(' · ')||'—'}</div>
+        <div class="card-types">${types||'<span class="type-badge" style="background:#444">?</span>'}</div>
       </div>
     </div>`;
   }).join('');
 }
 
-function filterCards() {
-  const q = document.getElementById('search-input').value.toLowerCase();
-  const filtered = allEntries.filter(e =>
-    e.name.toLowerCase().includes(q) ||
-    (e.type1 && e.type1.toLowerCase().includes(q)) ||
-    (e.type2 && e.type2.toLowerCase().includes(q)) ||
-    (e.description && e.description.toLowerCase().includes(q))
-  );
-  renderGrid(filtered);
+function setGrid(html){ document.getElementById('grid').innerHTML=html; }
+
+function filterGrid(){
+  const q=document.getElementById('search').value.toLowerCase();
+  const tf=document.getElementById('type-filter').value.toLowerCase();
+  const list=entries.filter(e=>{
+    const matchQ=!q||e.name.toLowerCase().includes(q)||(e.type1&&e.type1.toLowerCase().includes(q))||(e.description&&e.description.toLowerCase().includes(q));
+    const matchT=!tf||(e.type1&&e.type1.toLowerCase()===tf)||(e.type2&&e.type2.toLowerCase()===tf);
+    return matchQ&&matchT;
+  });
+  renderGrid(list);
 }
 
-// ============================
-// MODALS
-// ============================
-function openAddModal() {
-  editingId = null;
-  pendingImageBase64 = null;
-  document.getElementById('form-modal-title').textContent = 'NOUVELLE ENTRÉE';
-  document.getElementById('f-name').value = '';
-  document.getElementById('f-type1').value = '';
-  document.getElementById('f-type2').value = '';
-  document.getElementById('f-height').value = '';
-  document.getElementById('f-weight').value = '';
-  document.getElementById('f-desc').value = '';
-  document.getElementById('img-preview').classList.remove('show');
-  document.getElementById('img-placeholder').style.display = 'flex';
-  document.getElementById('form-modal').classList.add('open');
+// ── MODALS ──
+function openDetail(id){
+  const e=entries.find(a=>a.id===id); if(!e) return;
+  detailId=id;
+  const idx=entries.indexOf(e)+1;
+  const num='#'+String(idx).padStart(3,'0');
+  const c1=typeColor(e.type1), c2=typeColor(e.type2||e.type1);
+
+  document.getElementById('detail-hero-bg').style.background=`linear-gradient(135deg,${c1}66,${c2}44)`;
+  document.getElementById('d-num').textContent=num;
+  document.getElementById('d-name').textContent=e.name;
+
+  document.getElementById('detail-img-slot').innerHTML=e.photo
+    ?`<img class="detail-photo" src="${e.photo}" alt="${e.name}">`
+    :`<div class="detail-photo-ph">👤</div>`;
+
+  document.getElementById('d-types').innerHTML=[e.type1,e.type2].filter(Boolean)
+    .map(t=>`<span class="type-badge" style="background:${typeColor(t)};font-size:13px;padding:5px 14px">${t}</span>`).join('');
+
+  const stats=[];
+  if(e.height) stats.push(`<div class="stat-box"><div class="stat-label">Taille</div><div class="stat-val">${e.height}</div></div>`);
+  if(e.weight) stats.push(`<div class="stat-box"><div class="stat-label">Poids</div><div class="stat-val">${e.weight}</div></div>`);
+  document.getElementById('d-stats').innerHTML=stats.join('');
+
+  const desc=document.getElementById('d-desc');
+  if(e.description){ desc.textContent=e.description; desc.style.display='block'; }
+  else desc.style.display='none';
+
+  document.getElementById('detail-overlay').classList.add('open');
 }
 
-function closeFormModal() {
-  document.getElementById('form-modal').classList.remove('open');
+function closeDetail(){ document.getElementById('detail-overlay').classList.remove('open'); }
+
+function editCurrent(){
+  const e=entries.find(a=>a.id===detailId); if(!e) return;
+  closeDetail(); editId=e.id; pendingImg=null;
+  document.getElementById('form-title').textContent='MODIFIER';
+  document.getElementById('f-name').value=e.name||'';
+  document.getElementById('f-t1').value=e.type1||'';
+  document.getElementById('f-t2').value=e.type2||'';
+  document.getElementById('f-h').value=e.height||'';
+  document.getElementById('f-w').value=e.weight||'';
+  document.getElementById('f-desc').value=e.description||'';
+  const prev=document.getElementById('photo-prev');
+  const ph=document.getElementById('photo-ph');
+  if(e.photo){ prev.src=e.photo; prev.classList.add('show'); ph.style.display='none'; }
+  else{ prev.classList.remove('show'); ph.style.display='flex'; }
+  document.getElementById('form-overlay').classList.add('open');
 }
 
-function openDetail(id) {
-  const e = allEntries.find(a => a.id === id);
-  if (!e) return;
-  currentDetailId = id;
-  const idx = allEntries.indexOf(e) + 1;
-  const num = '#' + String(idx).padStart(3, '0');
+function deleteCurrent(){ if(confirm('Supprimer cette entrée ?')) deleteEntry(detailId); }
 
-  document.getElementById('detail-number-header').textContent = `— ${num} —`;
-  document.getElementById('detail-name').textContent = e.name;
-  document.getElementById('detail-number').textContent = num;
-
-  const imgWrap = document.getElementById('detail-img-wrap');
-  imgWrap.innerHTML = e.photo
-    ? `<img class="detail-img" src="${e.photo}" alt="${e.name}">`
-    : `<div class="detail-img-placeholder">👤</div>`;
-
-  const tags = [e.type1, e.type2].filter(Boolean);
-  document.getElementById('detail-tags').innerHTML = tags.length
-    ? tags.map(t => `<span class="tag tag-${t.toLowerCase()} detail-tag">${t}</span>`).join('')
-    : '<span class="tag tag-default">Non classé</span>';
-
-  const stats = document.getElementById('detail-stats');
-  stats.innerHTML = '';
-  if (e.height) stats.innerHTML += `<div class="stat-box"><div class="stat-label">Taille</div><div class="stat-value">${e.height}</div></div>`;
-  if (e.weight) stats.innerHTML += `<div class="stat-box"><div class="stat-label">Poids</div><div class="stat-value">${e.weight}</div></div>`;
-
-  const desc = document.getElementById('detail-desc');
-  if (e.description) { desc.textContent = e.description; desc.style.display = 'block'; }
-  else { desc.style.display = 'none'; }
-
-  document.getElementById('detail-modal').classList.add('open');
+function openAddModal(){
+  editId=null; pendingImg=null;
+  document.getElementById('form-title').textContent='NOUVELLE ENTRÉE';
+  ['f-name','f-h','f-w','f-desc'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('f-t1').value=''; document.getElementById('f-t2').value='';
+  document.getElementById('photo-prev').classList.remove('show');
+  document.getElementById('photo-ph').style.display='flex';
+  document.getElementById('form-err').classList.remove('show');
+  document.getElementById('form-overlay').classList.add('open');
 }
 
-function closeDetailModal() {
-  document.getElementById('detail-modal').classList.remove('open');
-}
+function closeForm(){ document.getElementById('form-overlay').classList.remove('open'); }
 
-function editCurrent() {
-  const e = allEntries.find(a => a.id === currentDetailId);
-  if (!e) return;
-  closeDetailModal();
-  editingId = e.id;
-  pendingImageBase64 = null;
-  document.getElementById('form-modal-title').textContent = 'MODIFIER';
-  document.getElementById('f-name').value = e.name || '';
-  document.getElementById('f-type1').value = e.type1 || '';
-  document.getElementById('f-type2').value = e.type2 || '';
-  document.getElementById('f-height').value = e.height || '';
-  document.getElementById('f-weight').value = e.weight || '';
-  document.getElementById('f-desc').value = e.description || '';
-  if (e.photo) {
-    document.getElementById('img-preview').src = e.photo;
-    document.getElementById('img-preview').classList.add('show');
-    document.getElementById('img-placeholder').style.display = 'none';
-  } else {
-    document.getElementById('img-preview').classList.remove('show');
-    document.getElementById('img-placeholder').style.display = 'flex';
-  }
-  document.getElementById('form-modal').classList.add('open');
-}
+function formErr(msg){ const e=document.getElementById('form-err'); e.textContent=msg; e.classList.add('show'); }
 
-function deleteCurrent() {
-  if (confirm('Supprimer cette entrée ?')) deleteEntry(currentDetailId);
-}
-
-// Close modals on overlay click
-document.getElementById('form-modal').addEventListener('click', e => { if (e.target === e.currentTarget) closeFormModal(); });
-document.getElementById('detail-modal').addEventListener('click', e => { if (e.target === e.currentTarget) closeDetailModal(); });
-
-// ============================
-// IMAGE
-// ============================
-function previewImage(input) {
-  if (!input.files[0]) return;
-  const reader = new FileReader();
-  reader.onload = e => {
-    pendingImageBase64 = e.target.result;
-    document.getElementById('img-preview').src = pendingImageBase64;
-    document.getElementById('img-preview').classList.add('show');
-    document.getElementById('img-placeholder').style.display = 'none';
+// ── PHOTO ──
+function previewPhoto(input){
+  if(!input.files[0]) return;
+  const r=new FileReader();
+  r.onload=ev=>{
+    pendingImg=ev.target.result;
+    const prev=document.getElementById('photo-prev');
+    prev.src=pendingImg; prev.classList.add('show');
+    document.getElementById('photo-ph').style.display='none';
   };
-  reader.readAsDataURL(input.files[0]);
+  r.readAsDataURL(input.files[0]);
 }
 
-// ============================
-// TOAST
-// ============================
-function showToast(msg, type = '') {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.className = 'toast show ' + type;
-  setTimeout(() => t.className = 'toast', 3000);
+// ── TOAST ──
+function toast(msg,type=''){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.className='toast show '+(type||'');
+  setTimeout(()=>t.className='toast',3000);
 }
 </script>
 </body>
