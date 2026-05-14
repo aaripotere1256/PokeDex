@@ -17,10 +17,30 @@ html,body{
 }
 
 /* ═══════════════════════════════
+   DESKTOP WRAPPER
+═══════════════════════════════ */
+body{
+  display:flex;
+  justify-content:center;
+  align-items:flex-start;
+  min-height:100vh;
+  background:#0d0404;
+}
+
+#mobile-frame{
+  width:100%;
+  max-width:420px;
+  min-height:100vh;
+  background:#1a0808;
+  position:relative;
+  box-shadow:0 0 60px rgba(0,0,0,0.8);
+}
+
+/* ═══════════════════════════════
    AUTH SCREEN
 ═══════════════════════════════ */
 #auth-screen{
-  position:fixed;inset:0;z-index:1000;
+  position:absolute;inset:0;z-index:1000;
   background:linear-gradient(160deg,#2d0a0a,#1a0808 60%,#0a0a2d);
   display:flex;align-items:center;justify-content:center;
   padding:20px;
@@ -109,7 +129,6 @@ html,body{
 ═══════════════════════════════ */
 #app{display:none;min-height:100vh;padding:16px 12px 24px;}
 
-/* Top decorative bar */
 .dex-topbar{
   background:linear-gradient(145deg,#c0132b,#8b0a1e);
   border-radius:20px 20px 0 0;
@@ -150,14 +169,12 @@ html,body{
 }
 .dex-user-btn:hover{background:rgba(0,0,0,0.5);}
 
-/* Main body */
 .dex-body{
   background:linear-gradient(145deg,#b8112a,#880a1c);
   border:3px solid #e01535;border-top:none;border-bottom:none;
   padding:12px;
 }
 
-/* Screen area */
 .dex-screen-wrap{
   background:#222;border-radius:10px;
   padding:8px;
@@ -172,7 +189,6 @@ html,body{
 .screen-dot{width:7px;height:7px;border-radius:50%;background:#444;}
 .screen-dot.active{background:#66ff66;box-shadow:0 0 6px #66ff66;}
 
-/* Search inside screen */
 .screen-search{
   background:#111;border-radius:6px;
   padding:8px 12px;
@@ -187,7 +203,6 @@ html,body{
 .screen-search input::placeholder{color:#336633;}
 .screen-search-icon{font-size:14px;opacity:0.6;}
 
-/* Controls below screen */
 .dex-controls{
   display:flex;align-items:center;gap:8px;
   padding:8px 4px;
@@ -226,7 +241,6 @@ html,body{
   border:1px solid #333;z-index:2;
 }
 
-/* Green slot */
 .dex-slot{
   height:36px;border-radius:8px;
   background:linear-gradient(135deg,#2d8a3a,#1a5e26);
@@ -273,10 +287,6 @@ html,body{
   display:flex;align-items:center;justify-content:center;
   position:relative;overflow:hidden;
 }
-.card-screen-bg{
-  position:absolute;inset:0;
-  opacity:0.3;
-}
 .card-screen-scanlines{
   position:absolute;inset:0;
   background:repeating-linear-gradient(0deg,rgba(0,0,0,0.1) 0px,rgba(0,0,0,0.1) 1px,transparent 1px,transparent 3px);
@@ -288,13 +298,6 @@ html,body{
   border:3px solid rgba(255,255,255,0.2);
   position:relative;z-index:1;
   box-shadow:0 4px 16px rgba(0,0,0,0.5);
-}
-.card-photo-ph{
-  width:75px;height:75px;border-radius:50%;
-  background:rgba(255,255,255,0.05);
-  border:3px solid rgba(255,255,255,0.1);
-  display:flex;align-items:center;justify-content:center;
-  font-size:32px;position:relative;z-index:1;
 }
 .card-num{
   position:absolute;top:7px;right:9px;
@@ -325,7 +328,6 @@ html,body{
   letter-spacing:0.3px;color:#fff;
 }
 
-/* State boxes */
 .state-box{
   grid-column:1/-1;
   text-align:center;padding:40px 20px;
@@ -421,7 +423,7 @@ html,body{
   background:rgba(0,0,0,0.85);
   backdrop-filter:blur(4px);
   z-index:300;
-  display:flex;align-items:flex-end;
+  display:flex;align-items:flex-end;justify-content:center;
   opacity:0;pointer-events:none;
   transition:opacity 0.2s;
 }
@@ -429,6 +431,7 @@ html,body{
 
 .modal-sheet{
   width:100%;
+  max-width:420px;
   background:linear-gradient(160deg,#1a0505,#110304);
   border-radius:24px 24px 0 0;
   border:2px solid #440a0a;
@@ -498,7 +501,6 @@ html,body{
 .stat-label{font-size:9px;font-weight:800;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:0.4px;margin-bottom:3px;}
 .stat-val{font-size:15px;font-weight:900;}
 
-/* Capacités amoureuses */
 .caps-title{
   font-family:'Press Start 2P',monospace;font-size:8px;
   color:#ff6688;margin-bottom:10px;
@@ -518,7 +520,6 @@ html,body{
 .cap-name{font-size:10px;font-weight:800;color:rgba(255,255,255,0.8);}
 .cap-val{font-size:11px;font-weight:900;color:#ff88aa;margin-top:2px;}
 
-/* Barre de compatibilité */
 .compat-wrap{
   background:rgba(255,80,120,0.06);
   border:1px solid rgba(255,80,120,0.15);
@@ -563,7 +564,7 @@ html,body{
   background:rgba(0,0,0,0.85);
   backdrop-filter:blur(4px);
   z-index:400;
-  display:flex;align-items:flex-end;
+  display:flex;align-items:flex-end;justify-content:center;
   opacity:0;pointer-events:none;
   transition:opacity 0.2s;
 }
@@ -571,6 +572,7 @@ html,body{
 
 .form-sheet{
   width:100%;
+  max-width:420px;
   background:linear-gradient(160deg,#1a0505,#110304);
   border-radius:24px 24px 0 0;
   border:2px solid #440a0a;border-bottom:none;
@@ -693,6 +695,8 @@ input[type=file]{display:none;}
 </head>
 <body>
 
+<div id="mobile-frame">
+
 <!-- AUTH -->
 <div id="auth-screen">
   <div class="auth-box">
@@ -725,7 +729,6 @@ input[type=file]{display:none;}
 <!-- APP -->
 <div id="app">
 
-  <!-- POKÉDEX TOP -->
   <div class="dex-topbar">
     <div class="dex-biglens"></div>
     <div>
@@ -737,10 +740,8 @@ input[type=file]{display:none;}
     <button class="dex-user-btn" id="user-bubble" onclick="logout()" title="Déconnexion">?</button>
   </div>
 
-  <!-- POKÉDEX BODY -->
   <div class="dex-body">
 
-    <!-- Screen / search -->
     <div class="dex-screen-wrap">
       <div class="dex-screen-dots">
         <div class="screen-dot active"></div>
@@ -753,7 +754,6 @@ input[type=file]{display:none;}
       </div>
     </div>
 
-    <!-- Controls -->
     <div class="dex-controls">
       <div class="ctrl-circle"></div>
       <div class="ctrl-btns">
@@ -767,13 +767,11 @@ input[type=file]{display:none;}
       </div>
     </div>
 
-    <!-- Green slot / add btn -->
     <div class="dex-slot">
       <button class="slot-add-btn" onclick="openAddModal()">+ NOUVEAU</button>
       <span class="slot-count" id="slot-count">0 ENTRÉES</span>
     </div>
 
-    <!-- Cards grid -->
     <div class="cards-grid" id="grid">
       <div class="state-box">
         <div class="mini-pokeball"></div>
@@ -783,7 +781,6 @@ input[type=file]{display:none;}
 
   </div>
 
-  <!-- BOTTOM PANEL -->
   <div class="dex-bottom">
     <div class="panel-screen">
       <div class="panel-text" id="panel-msg">PRÊT<br>EN ATTENTE...</div>
@@ -804,6 +801,7 @@ input[type=file]{display:none;}
   </div>
 
 </div>
+</div><!-- end mobile-frame -->
 
 <!-- DETAIL SHEET -->
 <div class="modal-overlay" id="detail-overlay" onclick="if(event.target===this)closeDetail()">
@@ -821,18 +819,13 @@ input[type=file]{display:none;}
       <div class="sheet-age" id="s-age"></div>
       <div class="sheet-types" id="s-types"></div>
       <div class="sheet-stats" id="s-stats"></div>
-
-      <!-- Capacités amoureuses -->
       <div class="caps-title">💘 CAPACITÉS</div>
       <div class="caps-grid" id="s-caps"></div>
-
-      <!-- Compatibilité -->
       <div class="compat-wrap" id="s-compat-wrap">
         <div class="compat-label">💫 Compatibilité</div>
         <div class="compat-bar-bg"><div class="compat-bar" id="s-compat-bar" style="width:0%"></div></div>
         <div class="compat-pct" id="s-compat-pct">0%</div>
       </div>
-
       <div class="sheet-desc" id="s-desc" style="display:none"></div>
       <div class="sheet-actions">
         <button class="btn-edit" onclick="editCurrent()">✏️ Modifier</button>
@@ -881,8 +874,6 @@ input[type=file]{display:none;}
           </select>
         </div>
       </div>
-
-      <!-- Capacités amoureuses -->
       <div style="margin-bottom:8px;font-size:10px;font-weight:800;color:rgba(255,100,130,0.7);text-transform:uppercase;letter-spacing:0.4px;">💘 Capacités amoureuses</div>
       <div class="form-row2">
         <div class="fg"><label>Capacité 1</label><input type="text" id="f-c1" placeholder="ex: Coup de foudre"></div>
@@ -892,14 +883,11 @@ input[type=file]{display:none;}
         <div class="fg"><label>Capacité 3</label><input type="text" id="f-c3" placeholder="ex: Câlin"></div>
         <div class="fg"><label>Capacité 4</label><input type="text" id="f-c4" placeholder="ex: Sourire"></div>
       </div>
-
       <div class="fg">
-        <label>Compatibilité (%) </label>
+        <label>Compatibilité (%)</label>
         <input type="number" id="f-compat" placeholder="0 à 100" min="0" max="100">
       </div>
-
       <div class="fg"><label>Description / Anecdote</label><textarea id="f-desc" placeholder="Ce que tu retiens de cette personne..."></textarea></div>
-
       <div class="fg">
         <label>Photo</label>
         <div class="photo-area">
@@ -939,7 +927,6 @@ function typeCol(t){return t?(TYPE_COLORS[t.toLowerCase()]||'#884444'):'#884444'
 
 let user=null,entries=[],editId=null,detailId=null,pendingImg=null,activeFilter='';
 
-// AUTH
 function switchTab(tab){
   document.querySelectorAll('.auth-tab').forEach((b,i)=>b.classList.toggle('active',(tab==='login'?i===0:i===1)));
   document.getElementById('login-f').style.display=tab==='login'?'block':'none';
@@ -981,7 +968,6 @@ function onLogin(u){
 }
 sb.auth.getSession().then(({data})=>{if(data.session?.user)onLogin(data.session.user);});
 
-// DB
 async function loadEntries(){
   setGrid('<div class="state-box"><div class="mini-pokeball"></div><p style="font-size:11px;color:rgba(255,255,255,0.4);font-weight:700">Chargement...</p></div>');
   const{data,error}=await sb.from('amourdex_entries').select('*').eq('user_id',user.id).order('created_at',{ascending:true});
@@ -1045,7 +1031,6 @@ async function deleteEntry(id){
   closeDetail();loadEntries();
 }
 
-// RENDER
 function renderGrid(list){
   const count=document.getElementById('slot-count');
   count.textContent=list.length+(list.length>1?' ENTRÉES':' ENTRÉE');
@@ -1060,7 +1045,7 @@ function renderGrid(list){
     const bg=`linear-gradient(135deg,${c1}55,${c2}33)`;
     const img=e.photo
       ?`<img class="card-photo" src="${e.photo}" alt="${e.name}" onerror="this.style.display='none'">`
-      :`<div class="card-photo-placeholder" style="width:75px;height:75px;border-radius:50%;background:rgba(255,255,255,0.05);border:3px solid rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;font-size:32px">👤</div>`;
+      :`<div style="width:75px;height:75px;border-radius:50%;background:rgba(255,255,255,0.05);border:3px solid rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;font-size:32px">👤</div>`;
     const tags=[e.type1,e.type2].filter(Boolean).map(t=>`<span class="type-tag" style="background:${typeCol(t)}">${t}</span>`).join('');
     const heart=e.compat>=80?'💘':e.compat>=50?'❤️':e.compat>0?'🤍':'';
     return `<div class="poke-card" onclick="openDetail('${e.id}')">
@@ -1101,7 +1086,6 @@ function setPanel(txt){
   document.getElementById('panel-msg').textContent=txt;
 }
 
-// DETAIL
 function openDetail(id){
   const e=entries.find(a=>a.id===id);if(!e)return;
   detailId=id;
@@ -1117,26 +1101,18 @@ function openDetail(id){
   document.getElementById('s-age').textContent=(e.age?e.age+' ans':'Âge inconnu')+(e.genre?' · '+e.genre:'');
   document.getElementById('s-types').innerHTML=[e.type1,e.type2].filter(Boolean)
     .map(t=>`<span class="type-tag" style="background:${typeCol(t)};font-size:12px;padding:5px 12px">${t}</span>`).join('');
-
-  // Stats
   document.getElementById('s-stats').innerHTML='';
-
-  // Capacités
   const caps=[e.cap1,e.cap2,e.cap3,e.cap4].filter(Boolean);
   document.getElementById('s-caps').innerHTML=caps.length
     ?caps.map((c,i)=>`<div class="cap-box"><div class="cap-emoji">${CAP_EMOJIS[i]||'💫'}</div><div class="cap-name">${c}</div></div>`).join('')
     :`<div style="grid-column:1/-1;text-align:center;color:rgba(255,255,255,0.3);font-size:12px;padding:12px">Aucune capacité renseignée</div>`;
-
-  // Compat
   const pct=e.compat||0;
   document.getElementById('s-compat-bar').style.width='0%';
   document.getElementById('s-compat-pct').textContent=pct+'%';
   setTimeout(()=>document.getElementById('s-compat-bar').style.width=pct+'%',100);
-
   const desc=document.getElementById('s-desc');
   if(e.description){desc.textContent=e.description;desc.style.display='block';}
   else desc.style.display='none';
-
   document.getElementById('detail-overlay').classList.add('open');
   setPanel(e.name.toUpperCase()+'\n'+num);
 }
@@ -1165,7 +1141,6 @@ function editCurrent(){
 }
 function deleteCurrent(){if(confirm('Supprimer cette entrée ?'))deleteEntry(detailId);}
 
-// FORM
 function openAddModal(){
   editId=null;pendingImg=null;
   document.getElementById('form-title').textContent='NOUVELLE ENTRÉE';
@@ -1180,7 +1155,6 @@ function openAddModal(){
 function closeForm(){document.getElementById('form-overlay').classList.remove('open');}
 function formErr(m){const e=document.getElementById('form-err');e.textContent=m;e.classList.add('show');}
 
-// PHOTO
 function previewPhoto(input){
   if(!input.files[0])return;
   const r=new FileReader();
@@ -1193,7 +1167,6 @@ function previewPhoto(input){
   r.readAsDataURL(input.files[0]);
 }
 
-// TOAST
 function toast(msg,type=''){
   const t=document.getElementById('toast');
   t.textContent=msg;t.className='toast show '+(type||'');
