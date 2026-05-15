@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Poké D'ex</title>
+<title>Poke D'ex</title>
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#c0132b">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Poké D'ex">
+<meta name="apple-mobile-web-app-title" content="Poke D'ex">
 <link rel="apple-touch-icon" href="icon-192.png">
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Nunito:wght@600;700;800;900;1000&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -131,7 +131,7 @@ body{
 .btn-auth:hover{background:rgba(0,0,0,0.6);}
 
 /* ═══════════════════════════════
-   MAIN APP — POKÉDEX SHELL
+   MAIN APP — PokeDEX SHELL
 ═══════════════════════════════ */
 #app{display:none;min-height:100vh;padding:16px 12px 24px;}
 
@@ -728,7 +728,7 @@ input[type=file]{display:none;}
   50%{opacity:1;}
 }
 
-/* Pokédex fermé (état initial) */
+/* Pokedex fermé (état initial) */
 .pdex-wrap{
   position:relative;z-index:2;
   display:flex;flex-direction:column;align-items:center;
@@ -743,7 +743,7 @@ input[type=file]{display:none;}
   to{opacity:1;transform:scale(1) rotate(0deg);}
 }
 
-/* Les deux moitiés du pokédex */
+/* Les deux moitiés du Pokedex */
 .pdex-top-half{
   width:200px;height:100px;
   background:linear-gradient(160deg,#cc1133,#880a22);
@@ -905,7 +905,7 @@ input[type=file]{display:none;}
             <div class="pdex-led-s g"></div>
           </div>
           <div class="pdex-screen-mini" id="pdex-screen">
-            <div class="pdex-screen-text" id="pdex-screen-txt">Poké<br>D'Ex V1</div>
+            <div class="pdex-screen-text" id="pdex-screen-txt">Poke<br>D'Ex V1</div>
           </div>
         </div>
         <div class="pdex-hinge">
@@ -926,8 +926,8 @@ input[type=file]{display:none;}
       </div>
     </div>
 
-    <div class="splash-logo" id="splash-logo">Poké D'ex</div>
-    <div class="splash-sub" id="splash-sub">TON POKÉDEX AMOUREUX</div>
+    <div class="splash-logo" id="splash-logo">Poke D'ex</div>
+    <div class="splash-sub" id="splash-sub">TON PokeDEX AMOUREUX</div>
     <div class="splash-bar-wrap" id="splash-bar-wrap">
       <div class="splash-bar" id="splash-bar"></div>
     </div>
@@ -944,7 +944,7 @@ input[type=file]{display:none;}
       <div class="auth-leds">
         <div class="led r"></div><div class="led y"></div><div class="led g"></div>
       </div>
-      <div class="auth-title">Poké<br>D'ex</div>
+      <div class="auth-title">Poke<br>D'ex</div>
     </div>
     <div class="auth-tabs">
       <button class="auth-tab active" onclick="switchTab('login')">Connexion</button>
@@ -975,7 +975,7 @@ input[type=file]{display:none;}
         <div class="dex-led r"></div><div class="dex-led y"></div><div class="dex-led g"></div>
       </div>
     </div>
-    <div class="dex-appname">Poké<br>D'ex</div>
+    <div class="dex-appname">Poke<br>D'ex</div>
     <button class="dex-user-btn" id="user-bubble" onclick="logout()" title="Déconnexion">?</button>
   </div>
 
@@ -1444,8 +1444,8 @@ if('serviceWorker' in navigator){
   window.endSplash = endSplash;
 
   // Séquence
-  // t=0 : pokédex apparaît (via CSS floatIn)
-  // t=800 : pokédex s'ouvre
+  // t=0 : Pokedex apparaît (via CSS floatIn)
+  // t=800 : Pokedex s'ouvre
   // t=1400 : écran allume
   // t=1800 : logo apparaît
   // t=2200 : sous-titre apparaît
