@@ -23,9 +23,6 @@ html,body{
   overflow-x:hidden;
 }
 
-/* ═══════════════════════════════
-   DESKTOP WRAPPER
-═══════════════════════════════ */
 body{
   display:flex;
   justify-content:center;
@@ -131,7 +128,7 @@ body{
 .btn-auth:hover{background:rgba(0,0,0,0.6);}
 
 /* ═══════════════════════════════
-   MAIN APP — PokeDEX SHELL
+   MAIN APP
 ═══════════════════════════════ */
 #app{display:none;min-height:100vh;padding:16px 12px 24px;}
 
@@ -699,25 +696,34 @@ input[type=file]{display:none;}
 .toast.err{background:#2a0a0a;border-color:rgba(200,50,80,0.3);}
 
 /* ═══════════════════════════════
-   SPLASH SCREEN
+   SPLASH SCREEN — CORRIGÉ
 ═══════════════════════════════ */
 #splash{
-  position:fixed;inset:0;z-index:2000;
-  display:flex;align-items:center;justify-content:center;
+  position:fixed;
+  inset:0;
+  z-index:2000;
+  display:flex;
+  align-items:center;
+  justify-content:center;
   background:#0a0a0a;
   overflow:hidden;
 }
 #splash.hidden{display:none;}
 
 .splash-inner{
-  width:100%;max-width:420px;
-  height:100vh;
-  display:flex;flex-direction:column;
-  align-items:center;justify-content:center;
+  width:100%;
+  max-width:420px;
+  height:100%;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
   position:relative;
+  /* CORRECTION PWA : perspective nécessaire pour les rotateX 3D */
+  perspective:800px;
+  -webkit-perspective:800px;
 }
 
-/* Fond qui pulse */
 .splash-bg{
   position:absolute;inset:0;
   background:radial-gradient(ellipse at 50% 50%, #2d0a0a 0%, #0a0a0a 70%);
@@ -728,10 +734,10 @@ input[type=file]{display:none;}
   50%{opacity:1;}
 }
 
-/* Pokedex fermé (état initial) */
 .pdex-wrap{
   position:relative;z-index:2;
   display:flex;flex-direction:column;align-items:center;
+  width:100%;
 }
 
 .pdex-closed{
@@ -743,7 +749,7 @@ input[type=file]{display:none;}
   to{opacity:1;transform:scale(1) rotate(0deg);}
 }
 
-/* Les deux moitiés du Pokedex */
+/* CORRECTION PWA : transform-style + backface-visibility + will-change */
 .pdex-top-half{
   width:200px;height:100px;
   background:linear-gradient(160deg,#cc1133,#880a22);
@@ -751,6 +757,11 @@ input[type=file]{display:none;}
   border:3px solid #e01535;border-bottom:none;
   position:relative;overflow:hidden;
   transform-origin:bottom center;
+  transform-style:preserve-3d;
+  -webkit-transform-style:preserve-3d;
+  backface-visibility:hidden;
+  -webkit-backface-visibility:hidden;
+  will-change:transform;
   transition:transform 0.8s cubic-bezier(0.34,1.2,0.64,1);
 }
 .pdex-top-half::before{
@@ -810,11 +821,16 @@ input[type=file]{display:none;}
   border:3px solid #e01535;border-top:none;
   position:relative;
   transform-origin:top center;
+  transform-style:preserve-3d;
+  -webkit-transform-style:preserve-3d;
+  backface-visibility:hidden;
+  -webkit-backface-visibility:hidden;
+  will-change:transform;
   transition:transform 0.8s cubic-bezier(0.34,1.2,0.64,1);
 }
 .pdex-dpad{
   position:absolute;bottom:16px;right:20px;
-  width:36px;height:36px;position:absolute;bottom:16px;right:20px;
+  width:36px;height:36px;
 }
 .dpad-h2,.dpad-v2{position:absolute;background:#111;border-radius:2px;}
 .dpad-h2{top:33%;left:0;right:0;height:34%;}
@@ -829,18 +845,16 @@ input[type=file]{display:none;}
 .pdex-btn-mini.a{background:#cc2233;}
 .pdex-btn-mini.b{background:#1a66cc;}
 
-/* État ouvert */
+/* États ouverts */
 .pdex-top-half.open{transform:rotateX(-50deg);}
 .pdex-bottom-half.open{transform:rotateX(20deg);}
 
-/* Textes du splash */
 .splash-logo{
   margin-top:24px;position:relative;z-index:2;
   font-family:'Press Start 2P',monospace;
   font-size:20px;color:#fff;
   text-shadow:0 0 20px rgba(200,20,50,0.8), 0 0 40px rgba(200,20,50,0.4);
   opacity:0;
-  animation:logoIn 0.5s ease both;
 }
 .splash-sub{
   font-family:'Press Start 2P',monospace;
@@ -848,11 +862,9 @@ input[type=file]{display:none;}
   margin-top:8px;letter-spacing:2px;
   position:relative;z-index:2;
   opacity:0;
-  animation:logoIn 0.5s ease both;
 }
 @keyframes logoIn{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}
 
-/* Barre de chargement */
 .splash-bar-wrap{
   width:180px;height:6px;
   background:rgba(255,255,255,0.1);
@@ -874,10 +886,10 @@ input[type=file]{display:none;}
   color:rgba(255,255,255,0.3);
   background:none;border:none;cursor:pointer;
   animation:blink 1s step-end infinite;
+  white-space:nowrap;
 }
 @keyframes blink{0%,100%{opacity:0.3}50%{opacity:0.8}}
 
-/* Transition sortie */
 #splash.fade-out{
   animation:splashOut 0.5s ease forwards;
 }
@@ -932,7 +944,7 @@ input[type=file]{display:none;}
       <div class="splash-bar" id="splash-bar"></div>
     </div>
 
-    <button class="splash-skip" onclick="endSplash()" id="splash-skip">APPUIE POUR PASSER</button>
+    <button class="splash-skip" onclick="endSplash()">APPUIE POUR PASSER</button>
   </div>
 </div>
 
@@ -1419,19 +1431,18 @@ if('serviceWorker' in navigator){
 }
 
 /* ═══════════════════════
-   SPLASH ANIMATION
+   SPLASH ANIMATION — CORRIGÉE
 ═══════════════════════ */
 (function(){
-  const splash = document.getElementById('splash');
-  const top = document.getElementById('pdex-top');
-  const bot = document.getElementById('pdex-bot');
-  const screen = document.getElementById('pdex-screen');
+  const splash    = document.getElementById('splash');
+  const top       = document.getElementById('pdex-top');
+  const bot       = document.getElementById('pdex-bot');
+  const screen    = document.getElementById('pdex-screen');
   const screenTxt = document.getElementById('pdex-screen-txt');
-  const logo = document.getElementById('splash-logo');
-  const sub = document.getElementById('splash-sub');
-  const barWrap = document.getElementById('splash-bar-wrap');
-  const bar = document.getElementById('splash-bar');
-  const skip = document.getElementById('splash-skip');
+  const logo      = document.getElementById('splash-logo');
+  const sub       = document.getElementById('splash-sub');
+  const barWrap   = document.getElementById('splash-bar-wrap');
+  const bar       = document.getElementById('splash-bar');
 
   let done = false;
 
@@ -1443,48 +1454,42 @@ if('serviceWorker' in navigator){
   }
   window.endSplash = endSplash;
 
-  // Séquence
-  // t=0 : Pokedex apparaît (via CSS floatIn)
-  // t=800 : Pokedex s'ouvre
-  // t=1400 : écran allume
-  // t=1800 : logo apparaît
-  // t=2200 : sous-titre apparaît
-  // t=2400 : barre de chargement
-  // t=4200 : fin auto
-
+  // t=800ms  : ouverture du Pokédex
   setTimeout(()=>{
     top.classList.add('open');
     bot.classList.add('open');
   }, 800);
 
+  // t=1400ms : écran s'allume avec messages
   setTimeout(()=>{
     screen.style.opacity = '1';
-    let msgs = ['DÉMARRAGE...', 'CHARGEMENT\nDES DONNÉES', 'CONNEXION\nSUPABASE', 'PRÊT !'];
+    const msgs = ['DÉMARRAGE...','CHARGEMENT\nDES DONNÉES','CONNEXION\nSUPABASE','PRÊT !'];
     let i = 0;
     screenTxt.textContent = msgs[i];
-    let iv = setInterval(()=>{
+    const iv = setInterval(()=>{
       i++;
       if(i >= msgs.length){ clearInterval(iv); return; }
       screenTxt.textContent = msgs[i];
     }, 450);
   }, 1400);
 
+  // t=1800ms : logo
   setTimeout(()=>{
-    logo.style.animationDelay = '0s';
-    logo.style.opacity = '1';
     logo.style.animation = 'logoIn 0.5s ease both';
+    logo.style.opacity   = '1';
   }, 1800);
 
+  // t=2200ms : sous-titre
   setTimeout(()=>{
-    sub.style.animationDelay = '0s';
-    sub.style.opacity = '1';
     sub.style.animation = 'logoIn 0.5s ease both';
+    sub.style.opacity   = '1';
   }, 2200);
 
+  // t=2400ms : barre de progression
   setTimeout(()=>{
     barWrap.style.opacity = '1';
     let pct = 0;
-    let iv = setInterval(()=>{
+    const iv = setInterval(()=>{
       pct += 2;
       bar.style.width = pct + '%';
       if(pct >= 100){
