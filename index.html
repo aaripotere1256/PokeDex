@@ -697,11 +697,244 @@ input[type=file]{display:none;}
 .toast.show{transform:translateX(-50%) translateY(0);}
 .toast.ok{background:#0a2a0a;border-color:rgba(50,200,80,0.3);}
 .toast.err{background:#2a0a0a;border-color:rgba(200,50,80,0.3);}
+
+/* ═══════════════════════════════
+   SPLASH SCREEN
+═══════════════════════════════ */
+#splash{
+  position:fixed;inset:0;z-index:2000;
+  display:flex;align-items:center;justify-content:center;
+  background:#0a0a0a;
+  overflow:hidden;
+}
+#splash.hidden{display:none;}
+
+.splash-inner{
+  width:100%;max-width:420px;
+  height:100vh;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  position:relative;
+}
+
+/* Fond qui pulse */
+.splash-bg{
+  position:absolute;inset:0;
+  background:radial-gradient(ellipse at 50% 50%, #2d0a0a 0%, #0a0a0a 70%);
+  animation:bgpulse 2s ease-in-out infinite;
+}
+@keyframes bgpulse{
+  0%,100%{opacity:0.6;}
+  50%{opacity:1;}
+}
+
+/* Pokédex fermé (état initial) */
+.pdex-wrap{
+  position:relative;z-index:2;
+  display:flex;flex-direction:column;align-items:center;
+}
+
+.pdex-closed{
+  width:200px;
+  animation:floatIn 0.6s cubic-bezier(0.34,1.56,0.64,1) both;
+}
+@keyframes floatIn{
+  from{opacity:0;transform:scale(0.4) rotate(-10deg);}
+  to{opacity:1;transform:scale(1) rotate(0deg);}
+}
+
+/* Les deux moitiés du pokédex */
+.pdex-top-half{
+  width:200px;height:100px;
+  background:linear-gradient(160deg,#cc1133,#880a22);
+  border-radius:12px 12px 0 0;
+  border:3px solid #e01535;border-bottom:none;
+  position:relative;overflow:hidden;
+  transform-origin:bottom center;
+  transition:transform 0.8s cubic-bezier(0.34,1.2,0.64,1);
+}
+.pdex-top-half::before{
+  content:'';position:absolute;
+  top:0;left:0;right:0;height:50%;
+  background:rgba(255,255,255,0.05);
+  border-radius:12px 12px 0 0;
+}
+.pdex-lens{
+  position:absolute;top:16px;left:16px;
+  width:44px;height:44px;border-radius:50%;
+  background:radial-gradient(circle at 30% 30%,#b0eaff,#1188cc 60%,#004477);
+  border:4px solid rgba(255,255,255,0.3);
+  box-shadow:0 0 0 3px rgba(0,0,0,0.3);
+}
+.pdex-lens-shine{
+  position:absolute;top:4px;left:4px;
+  width:10px;height:10px;border-radius:50%;
+  background:rgba(255,255,255,0.6);
+  animation:shine 1.5s ease-in-out infinite;
+}
+@keyframes shine{0%,100%{opacity:0.4}50%{opacity:1}}
+.pdex-leds-top{
+  position:absolute;top:28px;left:72px;
+  display:flex;gap:6px;
+}
+.pdex-led-s{width:10px;height:10px;border-radius:50%;}
+.pdex-led-s.r{background:#ff3333;}
+.pdex-led-s.y{background:#ffcc00;}
+.pdex-led-s.g{background:#33ff33;}
+.pdex-screen-mini{
+  position:absolute;bottom:14px;left:50%;
+  transform:translateX(-50%);
+  width:100px;height:36px;
+  background:#111;border-radius:6px;border:2px solid #333;
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;transition:opacity 0.4s;
+}
+.pdex-screen-text{
+  font-family:'Press Start 2P',monospace;
+  font-size:5px;color:#44ff44;line-height:2;text-align:center;
+}
+
+.pdex-hinge{
+  width:220px;height:8px;
+  background:#550a15;
+  border-left:3px solid #e01535;border-right:3px solid #e01535;
+  position:relative;z-index:3;
+  display:flex;align-items:center;justify-content:center;gap:20px;
+}
+.hinge-dot{width:14px;height:14px;border-radius:50%;background:#880a22;border:2px solid #aa1130;}
+
+.pdex-bottom-half{
+  width:200px;height:100px;
+  background:linear-gradient(160deg,#b8112a,#880a1c);
+  border-radius:0 0 12px 12px;
+  border:3px solid #e01535;border-top:none;
+  position:relative;
+  transform-origin:top center;
+  transition:transform 0.8s cubic-bezier(0.34,1.2,0.64,1);
+}
+.pdex-dpad{
+  position:absolute;bottom:16px;right:20px;
+  width:36px;height:36px;position:absolute;bottom:16px;right:20px;
+}
+.dpad-h2,.dpad-v2{position:absolute;background:#111;border-radius:2px;}
+.dpad-h2{top:33%;left:0;right:0;height:34%;}
+.dpad-v2{left:33%;top:0;bottom:0;width:34%;}
+.pdex-btns-mini{
+  position:absolute;bottom:20px;left:16px;
+  display:flex;gap:6px;
+}
+.pdex-btn-mini{
+  width:22px;height:22px;border-radius:50%;border:none;
+}
+.pdex-btn-mini.a{background:#cc2233;}
+.pdex-btn-mini.b{background:#1a66cc;}
+
+/* État ouvert */
+.pdex-top-half.open{transform:rotateX(-50deg);}
+.pdex-bottom-half.open{transform:rotateX(20deg);}
+
+/* Textes du splash */
+.splash-logo{
+  margin-top:24px;position:relative;z-index:2;
+  font-family:'Press Start 2P',monospace;
+  font-size:20px;color:#fff;
+  text-shadow:0 0 20px rgba(200,20,50,0.8), 0 0 40px rgba(200,20,50,0.4);
+  opacity:0;
+  animation:logoIn 0.5s ease both;
+}
+.splash-sub{
+  font-family:'Press Start 2P',monospace;
+  font-size:7px;color:rgba(255,100,130,0.8);
+  margin-top:8px;letter-spacing:2px;
+  position:relative;z-index:2;
+  opacity:0;
+  animation:logoIn 0.5s ease both;
+}
+@keyframes logoIn{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}
+
+/* Barre de chargement */
+.splash-bar-wrap{
+  width:180px;height:6px;
+  background:rgba(255,255,255,0.1);
+  border-radius:3px;margin-top:20px;
+  position:relative;z-index:2;
+  overflow:hidden;
+  opacity:0;
+}
+.splash-bar{
+  height:100%;width:0%;
+  background:linear-gradient(90deg,#cc1133,#ff6688);
+  border-radius:3px;
+  transition:width 0.1s linear;
+}
+.splash-skip{
+  position:absolute;bottom:30px;left:50%;transform:translateX(-50%);
+  z-index:2;
+  font-family:'Press Start 2P',monospace;font-size:7px;
+  color:rgba(255,255,255,0.3);
+  background:none;border:none;cursor:pointer;
+  animation:blink 1s step-end infinite;
+}
+@keyframes blink{0%,100%{opacity:0.3}50%{opacity:0.8}}
+
+/* Transition sortie */
+#splash.fade-out{
+  animation:splashOut 0.5s ease forwards;
+}
+@keyframes splashOut{
+  to{opacity:0;transform:scale(1.05);}
+}
 </style>
 </head>
 <body>
 
 <div id="mobile-frame">
+
+<!-- SPLASH -->
+<div id="splash">
+  <div class="splash-inner">
+    <div class="splash-bg"></div>
+
+    <div class="pdex-wrap">
+      <div class="pdex-closed">
+        <div class="pdex-top-half" id="pdex-top">
+          <div class="pdex-lens"><div class="pdex-lens-shine"></div></div>
+          <div class="pdex-leds-top">
+            <div class="pdex-led-s r"></div>
+            <div class="pdex-led-s y"></div>
+            <div class="pdex-led-s g"></div>
+          </div>
+          <div class="pdex-screen-mini" id="pdex-screen">
+            <div class="pdex-screen-text" id="pdex-screen-txt">Poké<br>D'Ex V1</div>
+          </div>
+        </div>
+        <div class="pdex-hinge">
+          <div class="hinge-dot"></div>
+          <div class="hinge-dot"></div>
+          <div class="hinge-dot"></div>
+        </div>
+        <div class="pdex-bottom-half" id="pdex-bot">
+          <div class="pdex-btns-mini">
+            <div class="pdex-btn-mini a"></div>
+            <div class="pdex-btn-mini b"></div>
+          </div>
+          <div class="pdex-dpad">
+            <div class="dpad-h2"></div>
+            <div class="dpad-v2"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="splash-logo" id="splash-logo">Poké D'ex</div>
+    <div class="splash-sub" id="splash-sub">TON POKÉDEX AMOUREUX</div>
+    <div class="splash-bar-wrap" id="splash-bar-wrap">
+      <div class="splash-bar" id="splash-bar"></div>
+    </div>
+
+    <button class="splash-skip" onclick="endSplash()" id="splash-skip">APPUIE POUR PASSER</button>
+  </div>
+</div>
 
 <!-- AUTH -->
 <div id="auth-screen">
@@ -711,7 +944,7 @@ input[type=file]{display:none;}
       <div class="auth-leds">
         <div class="led r"></div><div class="led y"></div><div class="led g"></div>
       </div>
-      <div class="auth-title">POKÉ D'EX</div>
+      <div class="auth-title">Poké<br>D'ex</div>
     </div>
     <div class="auth-tabs">
       <button class="auth-tab active" onclick="switchTab('login')">Connexion</button>
@@ -742,7 +975,7 @@ input[type=file]{display:none;}
         <div class="dex-led r"></div><div class="dex-led y"></div><div class="dex-led g"></div>
       </div>
     </div>
-    <div class="dex-appname">AMOUR<br>DEX</div>
+    <div class="dex-appname">Poké<br>D'ex</div>
     <button class="dex-user-btn" id="user-bubble" onclick="logout()" title="Déconnexion">?</button>
   </div>
 
@@ -1184,6 +1417,86 @@ if('serviceWorker' in navigator){
     navigator.serviceWorker.register('./sw.js').catch(()=>{});
   });
 }
+
+/* ═══════════════════════
+   SPLASH ANIMATION
+═══════════════════════ */
+(function(){
+  const splash = document.getElementById('splash');
+  const top = document.getElementById('pdex-top');
+  const bot = document.getElementById('pdex-bot');
+  const screen = document.getElementById('pdex-screen');
+  const screenTxt = document.getElementById('pdex-screen-txt');
+  const logo = document.getElementById('splash-logo');
+  const sub = document.getElementById('splash-sub');
+  const barWrap = document.getElementById('splash-bar-wrap');
+  const bar = document.getElementById('splash-bar');
+  const skip = document.getElementById('splash-skip');
+
+  let done = false;
+
+  function endSplash(){
+    if(done) return;
+    done = true;
+    splash.classList.add('fade-out');
+    setTimeout(()=>{ splash.classList.add('hidden'); }, 500);
+  }
+  window.endSplash = endSplash;
+
+  // Séquence
+  // t=0 : pokédex apparaît (via CSS floatIn)
+  // t=800 : pokédex s'ouvre
+  // t=1400 : écran allume
+  // t=1800 : logo apparaît
+  // t=2200 : sous-titre apparaît
+  // t=2400 : barre de chargement
+  // t=4200 : fin auto
+
+  setTimeout(()=>{
+    top.classList.add('open');
+    bot.classList.add('open');
+  }, 800);
+
+  setTimeout(()=>{
+    screen.style.opacity = '1';
+    let msgs = ['DÉMARRAGE...', 'CHARGEMENT\nDES DONNÉES', 'CONNEXION\nSUPABASE', 'PRÊT !'];
+    let i = 0;
+    screenTxt.textContent = msgs[i];
+    let iv = setInterval(()=>{
+      i++;
+      if(i >= msgs.length){ clearInterval(iv); return; }
+      screenTxt.textContent = msgs[i];
+    }, 450);
+  }, 1400);
+
+  setTimeout(()=>{
+    logo.style.animationDelay = '0s';
+    logo.style.opacity = '1';
+    logo.style.animation = 'logoIn 0.5s ease both';
+  }, 1800);
+
+  setTimeout(()=>{
+    sub.style.animationDelay = '0s';
+    sub.style.opacity = '1';
+    sub.style.animation = 'logoIn 0.5s ease both';
+  }, 2200);
+
+  setTimeout(()=>{
+    barWrap.style.opacity = '1';
+    let pct = 0;
+    let iv = setInterval(()=>{
+      pct += 2;
+      bar.style.width = pct + '%';
+      if(pct >= 100){
+        clearInterval(iv);
+        setTimeout(endSplash, 300);
+      }
+    }, 36);
+  }, 2400);
+
+  // Sécurité max 6s
+  setTimeout(endSplash, 6000);
+})();
 </script>
 </body>
 </html>
