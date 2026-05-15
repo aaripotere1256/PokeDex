@@ -1,6 +1,6 @@
 {
-  "name": "AmourDex",
-  "short_name": "AmourDex",
+  "name": "Poké D'ex",
+  "short_name": "Poké D'ex",
   "description": "Ton pokédex amoureux personnel",
   "start_url": "./index.html",
   "display": "standalone",
